@@ -11,12 +11,14 @@ import { DEFAULT_LOCALE } from "@core/services/locale.service";
 import {PresetDefault} from '../assets/presets/default';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {environment} from '../environments/environment';
+import {provideApi} from '@core/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
     provideAnimationsAsync(),
+    provideApi(environment.apiUrl),
     providePrimeNG({
       theme: {
         preset: PresetDefault,

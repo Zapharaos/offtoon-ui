@@ -18,14 +18,10 @@ import {LocaleService} from '@core/services/locale.service';
   styleUrl: './not-found.component.scss'
 })
 export class NotFoundComponent {
-  protected readonly logoPath = "assets/img/logo_404.svg";
-
-  constructor(
-    private router: Router,
-    private localeService: LocaleService,
-  ) { }
+  constructor() { }
 
   home() {
-    this.router.navigate([this.localeService.getUrlPath()]);
+    // Hard reset to home URL - forces a full page reload
+    window.location.href = `/`;
   }
 }

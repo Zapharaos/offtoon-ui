@@ -4,7 +4,6 @@ import {TranslateModule} from "@ngx-translate/core";
 import {FormsModule} from "@angular/forms";
 import {NgOptimizedImage} from '@angular/common';
 import {FooterComponent} from '@shared/components/footer/footer.component';
-import {LocaleService} from '@core/services/locale.service';
 
 @Component({
     selector: 'app-basic-layout',
@@ -21,16 +20,13 @@ import {LocaleService} from '@core/services/locale.service';
 })
 export class BasicLayoutComponent {
 
-  protected readonly logoPath = "assets/img/logo.svg";
+  protected readonly logoPath = "assets/img/logov3.png";
   @Input() actionsTemplate!: TemplateRef<unknown>;
 
-  constructor(
-    private localeService: LocaleService,
-  ) {
-  }
+  constructor() {}
 
   home() {
     // Hard reset to home URL - forces a full page reload
-    window.location.href = `/${this.localeService.getUrlPath()}`;
+    window.location.href = `/`;
   }
 }

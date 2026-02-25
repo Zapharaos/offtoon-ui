@@ -312,17 +312,18 @@ export const PresetDefault = definePreset(Aura, {
         anchorGutter: "2px",
         fontFamily: "'Nunito Sans', sans-serif",
         primary: {
-            50: "#fffdf2",
-            100: "#fff5c2",
-            200: "#ffed92",
-            300: "#ffe562",
-            400: "#ffdd32",
-            500: "#FFDB58",
-            600: "#FFCB0D",
-            700: "#C39900",
-            800: "#8c7501",
-            900: "#665501",
-            950: "#403501"
+          // https://coolors.co/a1cca5-8fb996-709775-415d43-111d13
+            50: "#E7EEE8",
+            100: "#D0DDD1",
+            200: "#B8CCBB",
+            300: "#A1CCA5",
+            400: "#8FB996",
+            500: "#709775",
+            600: "#5E8263",
+            700: "#4D6A51",
+            800: "#334736",
+            900: "#222F24",
+            950: "#111D13"
         },
         formField: {
             paddingX: "0.75rem",
@@ -422,10 +423,10 @@ export const PresetDefault = definePreset(Aura, {
                   950: "{zinc.950}"
                 },
                 primary: {
-                    color: "{primary.500}",
+                    color: "{primary.400}",
                     contrastColor: "{surface.900}",
-                    hoverColor: "{primary.600}",
-                    activeColor: "{primary.700}"
+                    hoverColor: "{primary.500}",
+                    activeColor: "{primary.600}"
                 },
                 highlight: {
                     background: "color-mix(in srgb, {primary.400}, transparent 84%)",

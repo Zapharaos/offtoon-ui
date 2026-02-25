@@ -7,5 +7,15 @@
     "copyright": "© {{year}} Offtoon by ",
     "privacy-policy": "Privacy Policy",
     "terms-of-service": "Terms of Service"
+  },
+  "shared": {
+    "navigation": {
+      "scroll-top-label": "Scroll to top"
+    },
+    "not-found": {
+      "alt-image": "Brickhead sad",
+      "button": "Back to home",
+      "message": "Page not found"
+    }
   }
 }

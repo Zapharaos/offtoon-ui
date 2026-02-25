@@ -14,6 +14,6 @@ import {RouterLink} from "@angular/router";
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
-  protected readonly logoPath = "assets/img/logo.svg";
+  protected readonly logoPath = "assets/img/logov3.png";
   protected readonly year = new Date().getFullYear();
 }

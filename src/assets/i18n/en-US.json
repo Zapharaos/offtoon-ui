@@ -17,5 +17,17 @@
       "button": "Back to home",
       "message": "Page not found"
     }
+  },
+  "home": {
+    "search": {
+      "placeholder": "Search for a toon…",
+      "button": "Search",
+      "sources-label": "Sources",
+      "sources-hint": "Select at least one source",
+      "custom-url-placeholder": "Custom URL (optional)",
+      "results-count": "{{count}} result(s) found",
+      "no-results": "No results found. Try a different query.",
+      "open": "Open"
+    }
   }
 }

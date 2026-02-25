@@ -1,4 +1,5 @@
 @use "assets/styles/buttons";
+@use "assets/styles/tables";
 
 @layer tailwind-base, primeng, tailwind-utilities;
 
@@ -15,7 +16,7 @@
 
 :root {
   // https://coolors.co/a1cca5-8fb996-709775-415d43-111d13
-  --ground-background: #111812;
+  --ground-background: #090C09;
 
   --text-secondary-color: var(--p-surface-400);
   --text-secondary-hover-color: var(--p-surface-200);

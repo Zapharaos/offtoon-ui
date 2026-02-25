@@ -1,0 +1,59 @@
+:root {
+  --p-datatable-header-background: transparent;
+  --p-datatable-header-cell-background: transparent;
+  --p-datatable-header-cell-selected-color: var(--p-text-color);
+  --p-datatable-row-background: transparent;
+  --p-datatable-row-color: var(--text-secondary-color);
+  --p-datatable-row-hover-color: var(--text-secondary-hover-color);
+  --p-datatable-column-title-font-weight: 700;
+
+  --p-paginator-background: transparent;
+
+  // Light theme
+  --p-datatable-header-cell-selected-background: color-mix(in srgb,var(--p-primary-color),transparent 95%);
+  --p-datatable-header-cell-hover-background: color-mix(in srgb,var(--p-primary-color),transparent 97.5%);
+  --p-datatable-row-hover-background: color-mix(in srgb,var(--p-primary-color),transparent 97.5%);
+  --p-datatable-sorticon-hover-color: var(--p-primary-900);
+  --p-datatable-sorticon-active-color: var(--p-primary-color);
+}
+
+.table-brick-name {
+  color: var(--p-text-hover-muted-color);
+  font-weight: 800;
+}
+
+.p-datatable-tbody > tr:not(.p-datatable-row-selected):hover  .table-brick-name {
+  color: var(--p-text-color);
+}
+
+p-sorticon {
+  color: var(--text-secondary-color);
+}
+
+.p-datatable-sortable-column:not(.p-datatable-column-sorted):hover p-sorticon {
+  color: var(--p-datatable-sorticon-hover-color);
+}
+
+.p-datatable-column-sorted p-sorticon {
+  color: var(--p-datatable-sorticon-active-color);
+}
+
+.p-datatable-hoverable .p-datatable-tbody > tr.emptymessage:not(.p-datatable-row-selected):hover {
+  background-color: var(--p-datatable-row-background);
+  color: var(--p-datatable-row-color);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow: visible;
+}
+
+:root {
+  --p-dataview-header-background: transparent;
+  --p-dataview-content-background: transparent;
+  --p-dataview-row-hover-background: color-mix(in srgb,var(--p-primary-color),transparent 97.5%);
+
+  .p-dataview-emptymessage {
+    display: none;
+  }
+}

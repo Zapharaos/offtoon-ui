@@ -20,7 +20,7 @@ import {FooterComponent} from '@shared/components/footer/footer.component';
 })
 export class BasicLayoutComponent {
 
-  protected readonly logoPath = "assets/img/logov3.png";
+  protected readonly logoPath = "assets/img/logov3_dark.png";
   @Input() actionsTemplate!: TemplateRef<unknown>;
 
   constructor() {}

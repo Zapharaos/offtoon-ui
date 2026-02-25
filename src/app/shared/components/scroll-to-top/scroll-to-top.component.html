@@ -1,0 +1,13 @@
+<p-button
+  *ngIf="isVisible"
+  type="button"
+  icon="pi pi-arrow-up"
+  (onClick)="scrollToTop()"
+  class="scroll-to-top-button"
+  size="large"
+  [rounded]="true"
+  [raised]="true"
+  ariaLabel="{{ 'shared.navigation.scroll-top-label' | translate }}">
+</p-button>
+
+

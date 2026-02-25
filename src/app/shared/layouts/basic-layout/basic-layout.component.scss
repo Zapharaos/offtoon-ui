@@ -1,0 +1,74 @@
+// Header
+header {
+  background-color: var(--ground-background);
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(0);
+}
+
+header.header-hidden {
+  transform: translateY(-100%);
+}
+
+header > div > div {
+  height: var(--header-height);
+}
+
+header .logo {
+  fill: var(--primary-color);
+  height: calc(var(--header-height) * 3/4);
+  max-width: 100%;
+}
+::ng-deep header .p-button {
+  border-color: transparent;
+}
+::ng-deep header .p-button span {
+  font-size: 1.25rem;
+}
+
+// Content
+header + div {
+  margin-top: var(--header-height);
+}
+.content-wrapper {
+  padding-left: var(--dynamic-container-padding);
+  padding-right: var(--dynamic-container-padding)
+}
+@media screen and (min-width: 1921px) {
+  .content-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1352px !important;
+  }
+}
+
+// Sidebar - Default item
+li {
+  color: var(--text-secondary-color);
+}
+
+// Sidebar - Active item
+.menu-active {
+  background-color:
+    color-mix(in srgb, var(--p-primary-color) calc(100%), transparent);
+  color: var(--p-button-primary-color);
+}
+.menu-active .item-label {
+  font-weight: 600;
+}
+
+// Sidebar - Active item hover
+.menu-active.menu-hover:hover  {
+  background-color:
+    color-mix(in srgb, var(--p-primary-hover-color) calc(100%), transparent);
+}
+
+// Sidebar - Hover default item
+:not(.menu-active).menu-hover:hover {
+  background: var(--p-content-hover-background);
+  color: var(--p-content-hover-color);
+}
+
+// Sidebar - First LI missing space-y-2
+li li:first-of-type {
+  margin-top: 0.5rem;
+}

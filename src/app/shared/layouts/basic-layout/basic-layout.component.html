@@ -1,0 +1,28 @@
+<div class="flex flex-col h-dvh overflow-y-auto">
+  <!-- Header -->
+  <header>
+    <div class="container mx-auto px-6">
+      <div class="flex justify-between items-center">
+
+        <!-- Left side -->
+        <div class="flex items-center gap-3 hover:cursor-pointer" (click)="home()" (keydown.enter)="home()">
+          <div class="h-[60px] flex items-center">
+            <!-- Logo -->
+            <img [ngSrc]="logoPath" alt="Offtoon Logo" [width]="30" [height]="30"
+                 priority tabindex="0" class="logo hover:cursor-pointer"/>
+          </div>
+          <!-- Title -->
+          <h1 class="text-2xl font-bold">{{ "app.title" | translate }}</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 pt-8 sm:pt-12 md:pt-16 lg:pt-20">
+    <ng-content></ng-content>
+  </main>
+
+  <!-- Footer -->
+  <app-footer class="sm:mt-2 md:mt-4 lg:mt-8"></app-footer>
+</div>

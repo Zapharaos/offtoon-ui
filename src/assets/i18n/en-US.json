@@ -2,5 +2,10 @@
   "app": {
     "title": "Offtoon",
     "author": "Matthieu Freitag"
+  },
+  "footer": {
+    "copyright": "© {{year}} Offtoon by ",
+    "privacy-policy": "Privacy Policy",
+    "terms-of-service": "Terms of Service"
   }
 }

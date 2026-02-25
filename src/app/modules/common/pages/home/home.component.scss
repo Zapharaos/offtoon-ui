@@ -1,0 +1,28 @@
+.search-container {
+  transition: min-height 0.5s ease-in-out;
+
+  &.default-mode {
+    min-height: 42svh;
+  }
+
+  &.query-mode {
+    min-height: 0;
+  }
+}
+
+.grid .name {
+  margin: 0 0 auto;
+}
+
+.item:hover {
+  background-color: var(--p-dataview-row-hover-background);
+}
+
+::ng-deep .item:hover .name {
+  text-decoration: underline;
+}
+
+::ng-deep .p-divider-horizontal {
+  margin: 0;
+  padding: 0;
+}

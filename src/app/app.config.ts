@@ -12,12 +12,14 @@ import {PresetDefault} from '../assets/presets/default';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {environment} from '../environments/environment';
 import {provideApi} from '@core/api';
+import {provideHttpClient} from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
     provideAnimationsAsync(),
+    provideHttpClient(),
     provideApi(environment.apiUrl),
     providePrimeNG({
       theme: {

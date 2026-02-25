@@ -1,0 +1,13 @@
+<app-basic-layout>
+  <div class="w-full h-full flex flex-col justify-center items-center gap-16">
+    <div class="flex flex-col items-center gap-3">
+      <div class="fourzerofour flex flex-row items-center text-primary">
+        <span>4</span>
+        <img [ngSrc]="logoPath" [alt]="'shared.not-found.alt-image' | translate" [width]="100" [height]="100"/>
+        <span>4</span>
+      </div>
+      <p class="text-9xl font-black text-center sm:text-inherit">{{ 'shared.not-found.message' | translate}}</p>
+    </div>
+    <p-button (onClick)="home()" [label]="'shared.not-found.button' | translate" size="large" class="back-home"/>
+  </div>
+</app-basic-layout>

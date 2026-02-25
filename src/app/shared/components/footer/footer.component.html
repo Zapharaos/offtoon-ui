@@ -1,0 +1,23 @@
+<footer class="container mx-auto px-6 py-[1rem] sm:py-[3rem]">
+  <div class="w-full flex flex-col sm:flex-row gap-1 sm:gap-5 md:gap-9 lg:gap-12 justify-between items-center">
+    <div class="flex flex-col sm:flex-row items-center sm:justify-normal gap-3">
+      <img [src]="logoPath" alt="Offtoon Logo" [width]="20" [height]="20"/>
+      <span class="text-light text-center sm:text-left">
+        {{ 'footer.copyright' | translate : { year: year} }}
+        <a href="https://www.matthieu-freitag.com" target="_blank" class="link">{{ 'app.author' | translate }}</a>
+      </span>
+    </div>
+    <ul class="flex justify-center flex-wrap sm:gap-5 md:gap-7 lg:gap-9">
+      <li>
+        <p-button [link]="true"
+                  routerLink="/terms"
+                  label="{{'footer.terms-of-service' | translate}}"/>
+      </li>
+      <li>
+        <p-button [link]="true"
+                  routerLink="/privacy"
+                  label="{{'footer.privacy-policy' | translate}}"/>
+      </li>
+    </ul>
+  </div>
+</footer>

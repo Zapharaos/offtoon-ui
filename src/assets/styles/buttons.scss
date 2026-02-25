@@ -1,0 +1,57 @@
+:root {
+  --button-outlined-background: color-mix(in srgb,var(--p-primary-color),transparent 96%);
+  --button-outlined-hover-background: color-mix(in srgb,var(--p-primary-color),transparent 90%);
+  --button-outlined-color: var(--p-primary-500);
+  --button-outlined-hover-color: var(--p-primary-400);
+  --button-outlined-border-color: transparent; // var(--p-primary-950);
+  --button-outlined-hover-border-color: transparent; // var(--p-primary-800);
+
+  --clickable-hover-color: #AB8600;
+
+  // Footer
+  --footer-button-link-color: var(--p-primary-color);
+}
+
+.p-button-no-padding .p-button {
+  padding-block: 0 !important;
+  padding-inline: 0 !important;
+}
+
+.button-outlined .p-button-outlined {
+  background: var(--button-outlined-background);
+  color: var(--button-outlined-color);
+  border-color: var(--button-outlined-border-color);
+}
+
+.button-outlined .p-button-outlined:not(:disabled):hover {
+  background: var(--button-outlined-hover-background);
+  color: var(--button-outlined-hover-color);
+  border-color: var(--button-outlined-hover-border-color);
+}
+
+a.link {
+  color: var(--text-primary-color);
+}
+a.link:hover {
+  color: var(--p-primary-hover-color);
+  text-decoration: underline;
+}
+
+.clickable-id {
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    text-decoration: underline;
+    font-weight: 700;
+    color: var(--clickable-hover-color);
+  }
+}
+
+.clickable-id-wrapper {
+  display: inline;
+}
+
+footer .p-button {
+  color: var(--footer-button-link-color);
+}

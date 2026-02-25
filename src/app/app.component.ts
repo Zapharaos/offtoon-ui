@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {PrimeNG} from 'primeng/config';
@@ -11,7 +11,7 @@ import {Toast} from 'primeng/toast';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   constructor(private config: PrimeNG,
               private translateService: TranslateService,
               private localeService: LocaleService) {

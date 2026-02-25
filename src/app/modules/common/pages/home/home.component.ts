@@ -16,6 +16,7 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {SkeletonModule} from 'primeng/skeleton';
 import {TagModule} from 'primeng/tag';
 import {TranslateModule} from '@ngx-translate/core';
+import {Router} from '@angular/router';
 
 export interface SourceConfig {
   key: ApiSource;
@@ -56,6 +57,7 @@ export class HomeComponent {
   constructor(
     private toonService: ToonService,
     private notificationUtils: NotificationUtilsService,
+    private router: Router,
   ) {}
 
   get selectedSources(): SourceConfig[] {
@@ -107,7 +109,12 @@ export class HomeComponent {
     }
   }
 
-  openUrl(url: string): void {
-    window.open(url, '_blank', 'noopener,noreferrer');
+  navigateToToon(result: ToonSearchResult): void {
+    if (!result.id || !result.source) return;
+    const sourceConfig = this.sources.find(s => s.key === result.source);
+    const customUrl = sourceConfig?.customUrl?.trim();
+    this.router.navigate(['/toon', result.source, result.id], {
+      ...(customUrl ? {queryParams: {url: customUrl}} : {}),
+    });
   }
 }

@@ -1,0 +1,188 @@
+<app-basic-layout>
+  <app-scroll-to-top/>
+
+  <div class="container mx-auto px-6 pb-12">
+
+    <!-- Back button -->
+    <div class="mb-6">
+      <p-button
+        icon="pi pi-arrow-left"
+        [label]="'toon.back' | translate"
+        severity="secondary"
+        variant="text"
+        (onClick)="goBack()"
+      />
+    </div>
+
+    <!-- ─── Skeleton State ─── -->
+    @if (loading) {
+      <div class="flex flex-col md:flex-row gap-8">
+
+        <!-- Cover skeleton -->
+        <div class="shrink-0">
+          <p-skeleton width="220px" height="320px" styleClass="rounded-xl"/>
+        </div>
+
+        <!-- Info skeleton -->
+        <div class="flex flex-col gap-4 flex-1">
+          <p-skeleton height="2rem" width="60%"/>
+          <p-skeleton height="1rem" width="30%"/>
+          <p-skeleton height="1rem" width="40%"/>
+          <p-skeleton height="4rem"/>
+        </div>
+      </div>
+
+      <!-- Table skeleton -->
+      <div class="mt-10 flex flex-col gap-3">
+        <p-skeleton height="2.5rem"/>
+        @for (row of skeletonArray; track row) {
+          <p-skeleton height="2rem"/>
+        }
+      </div>
+    }
+
+    <!-- ─── Loaded State ─── -->
+    @if (!loading && toon) {
+
+      <!-- Toon Header -->
+      <div class="flex flex-col md:flex-row gap-8 mb-10">
+
+        <!-- Cover -->
+        <div class="shrink-0">
+          @if (toon.cover_url) {
+            <img
+              [src]="toon.cover_url"
+              [alt]="toon.title"
+              class="w-[220px] rounded-xl shadow-lg object-cover"
+              loading="lazy"
+            />
+          } @else {
+            <div class="w-[220px] h-[320px] rounded-xl bg-surface-200 dark:bg-surface-700 flex items-center justify-center text-surface-400">
+              <i class="pi pi-image text-4xl"></i>
+            </div>
+          }
+        </div>
+
+        <!-- Details -->
+        <div class="flex flex-col gap-3">
+          <h2 class="text-3xl font-bold leading-tight">{{ toon.title }}</h2>
+
+          <div class="flex items-center gap-2">
+            <p-tag [value]="toon.source ?? ''" severity="secondary" styleClass="uppercase text-xs"/>
+            @if (toon.author) {
+              <span class="text-sm text-surface-500">{{ toon.author }}</span>
+            }
+          </div>
+
+          @if (toon.description) {
+            <p class="text-sm text-surface-600 dark:text-surface-300 leading-relaxed max-w-2xl">
+              {{ toon.description }}
+            </p>
+          }
+
+          @if (toon.source_url) {
+            <a
+              [href]="toon.source_url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm text-primary-500 hover:underline w-fit"
+            >
+              {{ 'toon.view-source' | translate }}
+              <i class="pi pi-external-link ml-1 text-xs"></i>
+            </a>
+          }
+        </div>
+      </div>
+
+      <!-- ─── Chapters Table ─── -->
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-semibold">
+          {{ 'toon.chapters' | translate }}
+          <span class="text-sm font-normal text-surface-400 ml-2">
+            ({{ toon.chapters?.length ?? 0 }})
+          </span>
+        </h3>
+
+        @if (selectedChapters.length > 0) {
+          <span class="text-sm text-surface-400">
+            {{ 'toon.selected-count' | translate : { count: selectedChapters.length } }}
+          </span>
+        }
+      </div>
+
+      <p-table
+        [value]="toon.chapters ?? []"
+        [(selection)]="selectedChapters"
+        dataKey="id"
+        [paginator]="(toon.chapters?.length ?? 0) > 20"
+        [rows]="20"
+        [rowsPerPageOptions]="[20, 50, 100]"
+        styleClass="p-datatable-sm"
+        [tableStyle]="{'min-width': '40rem'}"
+      >
+        <ng-template #header>
+          <tr>
+            <th style="width: 3rem">
+              <p-tableHeaderCheckbox/>
+            </th>
+            <th pSortableColumn="number">
+              {{ 'toon.table.number' | translate }}
+              <p-sortIcon field="number"/>
+            </th>
+            <th>{{ 'toon.table.title' | translate }}</th>
+            <th pSortableColumn="date">
+              {{ 'toon.table.date' | translate }}
+              <p-sortIcon field="date"/>
+            </th>
+            <th style="width: 6rem"></th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-chapter>
+          <tr [pSelectableRow]="chapter">
+            <td>
+              <p-tableCheckbox [value]="chapter"/>
+            </td>
+            <td class="font-mono text-sm">
+              #{{ chapter.number }}
+            </td>
+            <td class="text-sm">
+              {{ chapter.title || ('toon.table.no-title' | translate) }}
+            </td>
+            <td class="text-sm text-surface-400">
+              {{ chapter.date | date : 'mediumDate' }}
+            </td>
+            <td>
+              <p-button
+                icon="pi pi-external-link"
+                severity="secondary"
+                variant="text"
+                size="small"
+                [title]="'toon.table.open-chapter' | translate"
+                (onClick)="openChapter(chapter)"
+              />
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="5" class="text-center text-surface-400 py-8">
+              {{ 'toon.table.empty' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+
+    <!-- ─── Error / Not Found ─── -->
+    @if (!loading && !toon) {
+      <div class="flex flex-col items-center justify-center mt-16 gap-3 text-surface-400">
+        <i class="pi pi-exclamation-circle text-4xl"></i>
+        <p class="text-lg">{{ 'toon.not-found' | translate }}</p>
+        <p-button [label]="'toon.back' | translate" icon="pi pi-arrow-left" (onClick)="goBack()"/>
+      </div>
+    }
+
+  </div>
+</app-basic-layout>

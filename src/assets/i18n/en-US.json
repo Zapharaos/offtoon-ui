@@ -29,5 +29,20 @@
       "no-results": "No results found. Try a different query.",
       "open": "Open"
     }
+  },
+  "toon": {
+    "back": "Back to search",
+    "view-source": "View on source",
+    "chapters": "Chapters",
+    "selected-count": "{{count}} chapter(s) selected",
+    "not-found": "Toon not found or an error occurred.",
+    "table": {
+      "number": "#",
+      "title": "Title",
+      "date": "Date",
+      "no-title": "—",
+      "open-chapter": "Open chapter",
+      "empty": "No chapters available."
+    }
   }
 }

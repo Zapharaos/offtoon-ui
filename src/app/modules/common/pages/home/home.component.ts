@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BasicLayoutComponent} from '@shared/layouts/basic-layout/basic-layout.component';
 import {FormsModule} from '@angular/forms';
 import {ScrollToTopComponent} from '@shared/components/scroll-to-top/scroll-to-top.component';
@@ -18,7 +18,7 @@ import {SkeletonModule} from 'primeng/skeleton';
 import {TagModule} from 'primeng/tag';
 import {SelectModule} from 'primeng/select';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 export interface SourceConfig {
   key: ApiSource;
@@ -49,7 +49,7 @@ export interface SortOption {
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
   searchInput = '';
   loading = false;
@@ -68,6 +68,7 @@ export class HomeComponent {
     private toonService: ToonService,
     private notificationUtils: NotificationUtilsService,
     private router: Router,
+    private route: ActivatedRoute,
     private translate: TranslateService,
   ) {
     this.sortOptions = [
@@ -77,6 +78,21 @@ export class HomeComponent {
       {label: this.translate.instant('home.search.sort.chapters-asc'),  value: 'chapters_asc'},
       {label: this.translate.instant('home.search.sort.chapters-desc'), value: 'chapters_desc'},
     ];
+  }
+
+  ngOnInit(): void {
+    const params = this.route.snapshot.queryParamMap;
+    const q = params.get('q');
+    const sourcesParam = params.getAll('sources');
+
+    if (sourcesParam.length > 0) {
+      this.sources.forEach(s => s.selected = sourcesParam.includes(s.key));
+    }
+
+    if (q) {
+      this.searchInput = q;
+      this.search();
+    }
   }
 
   get selectedSources(): SourceConfig[] {
@@ -158,6 +174,16 @@ export class HomeComponent {
       sources: this.selectedSources.map(s => s.key),
     };
 
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        q: this.searchInput.trim(),
+        sources: this.selectedSources.map(s => s.key),
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+
     this.loading = true;
     this.searched = false;
     this.results = [];
@@ -184,6 +210,11 @@ export class HomeComponent {
 
   navigateToToon(result: ToonSearchResult): void {
     if (!result.id || !result.source) return;
-    this.router.navigate(['/toon', result.source, result.id]);
+    this.router.navigate(['/toon', result.source, result.id], {
+      queryParams: {
+        back_q: this.searchInput.trim(),
+        back_sources: this.selectedSources.map(s => s.key),
+      },
+    });
   }
 }

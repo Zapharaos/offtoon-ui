@@ -19,9 +19,6 @@ import {DatePipe} from '@angular/common';
 
 // TODO : searchbar review
 
-// TODO : search input in the route, refetch on reload
-// TODO : toon page navigation should cache the previous page for back navigation
-
 @Component({
   selector: 'app-toon',
   imports: [
@@ -43,6 +40,9 @@ export class ToonComponent implements OnInit {
   toon: ToonToon | null = null;
   selectedChapters: ToonChapter[] = [];
 
+  private backQuery: string | null = null;
+  private backSources: string[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -53,6 +53,9 @@ export class ToonComponent implements OnInit {
   ngOnInit(): void {
     const source = this.route.snapshot.paramMap.get('source') as ApiSource;
     const slug = this.route.snapshot.paramMap.get('slug') ?? '';
+
+    this.backQuery = this.route.snapshot.queryParamMap.get('back_q');
+    this.backSources = this.route.snapshot.queryParamMap.getAll('back_sources');
 
     this.toonService.apiV1FetchPost({source, slug})
       .pipe(finalize(() => this.loading = false))
@@ -103,7 +106,10 @@ export class ToonComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    const queryParams: Record<string, string | string[]> = {};
+    if (this.backQuery) queryParams['q'] = this.backQuery;
+    if (this.backSources.length) queryParams['sources'] = this.backSources;
+    this.router.navigate(['/'], {queryParams});
   }
 
   openChapter(chapter: ToonChapter): void {

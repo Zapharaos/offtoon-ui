@@ -52,13 +52,14 @@ export class ToonComponent implements OnInit {
     const source = this.route.snapshot.paramMap.get('source') as ApiSource;
     const slug = this.route.snapshot.paramMap.get('slug') ?? '';
 
-    this.backQuery = this.route.snapshot.queryParamMap.get('back_q');
-    this.backSources = this.route.snapshot.queryParamMap.getAll('back_sources');
+    const state = history.state;
+    this.backQuery = state?.back_q ?? null;
+    this.backSources = state?.back_sources ?? [];
 
     this.toonService.apiV1FetchPost({source, slug})
       .pipe(finalize(() => this.loading = false))
       .subscribe({
-        next: (data) => { this.toon = data; },
+        next: (data) => { this.toon = data; console.log(this.toon); },
         error: (err) => { this.notificationUtils.showToastError('Failed to fetch toon', err); },
       });
   }

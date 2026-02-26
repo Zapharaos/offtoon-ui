@@ -89,7 +89,7 @@
             @if (toon.updated_on) {
               <div class="flex gap-2">
                 <span class="text-surface-400 shrink-0">{{ 'toon.meta.updated' | translate }}</span>
-                <span class="font-medium">{{ toon.updated_on }}</span>
+                <span class="font-medium">{{ toon.updated_on | date : 'longDate' }}</span>
               </div>
             }
           </div>
@@ -121,20 +121,26 @@
           }
         </h3>
 
-        @if (selectedChapters.length > 0) {
-          <span class="text-sm text-surface-400">
+        <div class="flex items-center gap-5">
+          @if (selectedChapters.length > 0) {
+            <span class="text-sm text-surface-400">
             {{ 'toon.selected-count' | translate : { count: selectedChapters.length } }}
           </span>
-        }
+          }
+          <p-button [label]="'toon.table.download' | translate" [disabled]="selectedChapters.length <= 0"/>
+        </div>
       </div>
 
       <p-table
         [value]="toon?.chapters ?? []"
         [(selection)]="selectedChapters"
+        selectionMode="multiple"
+        [metaKeySelection]="false"
         dataKey="id"
         [loading]="loading"
         [showLoader]="false"
         [paginator]="(toon?.chapters?.length ?? 0) > 20"
+        [rowHover]="true"
         [rows]="20"
         [rowsPerPageOptions]="[20, 50, 100]"
         styleClass="p-datatable-sm"
@@ -159,7 +165,7 @@
         </ng-template>
 
         <ng-template #loadingbody>
-          @for (row of skeletonArray; track row) {
+          @for (row of skeletonArray; track $index) {
             <tr>
               <td><p-skeleton/></td>
               <td><p-skeleton width="3rem"/></td>
@@ -182,7 +188,7 @@
               {{ chapter.title || ('toon.table.no-title' | translate) }}
             </td>
             <td class="text-sm text-surface-400">
-              {{ chapter.date | date : 'mediumDate' }}
+              {{ chapter.date | date : 'longDate' }}
             </td>
             <td>
               <p-button

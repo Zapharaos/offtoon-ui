@@ -219,7 +219,7 @@ export class HomeComponent implements OnInit {
   navigateToToon(result: ToonSearchResult): void {
     if (!result.id || !result.source) return;
     this.router.navigate(['/toon', result.source, result.id], {
-      queryParams: {
+      state: {
         back_q: this.searchInput.trim(),
         back_sources: this.selectedSources.map(s => s.key),
       },

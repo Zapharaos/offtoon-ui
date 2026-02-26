@@ -6,46 +6,44 @@
     <!-- ─── Search Section ─── -->
     <div class="flex flex-col items-center gap-6">
 
-      <!-- Source Selection -->
-      <div class="w-full max-w-2xl">
-        <p class="text-sm font-semibold mb-3 text-surface-500">
-          {{ 'home.search.sources-label' | translate }}
-          <span class="text-xs font-normal ml-1 text-surface-400">
-            ({{ 'home.search.sources-hint' | translate }})
-          </span>
-        </p>
-
-        <div class="flex flex-row gap-4 flex-wrap">
-          @for (source of sources; track source.key) {
-            <div class="flex items-center gap-2">
-              <p-checkbox
-                [(ngModel)]="source.selected"
-                [binary]="true"
-                [inputId]="'source-' + source.key"
-              />
-              <label [for]="'source-' + source.key" class="cursor-pointer select-none">{{ source.label }}</label>
-            </div>
-          }
+    <!-- Search Bar -->
+      <div class="searchbar flex flex-nowrap items-center justify-between gap-3 w-full max-w-2xl m-0-auto search-input rounded-full max-h-16 h-16 pr-1">
+        <input pInputText type="text"
+               class="px-6 w-full h-full border-none rounded-full text-light"
+               [placeholder]="'home.search.placeholder' | translate"
+               [(ngModel)]="searchInput"
+               (keydown)="onSearchKeydown($event)"
+        />
+        <div class="flex items-center justify-between gap-3 pr-2">
+          <p-multiselect
+            [options]="sources"
+            [(ngModel)]="selectedSourcesList"
+            optionLabel="label"
+            [placeholder]="'home.search.sources-placeholder' | translate"
+            [showHeader]="false"
+            [showClear]="false"
+            styleClass="border-none shadow-none sources-select"
+          >
+            <ng-template #item let-option>
+              <div class="flex items-center gap-2">
+                <i class="pi text-sm w-4 text-center"
+                   [class.pi-check]="isSourceSelected(option)"
+                   [class.opacity-0]="!isSourceSelected(option)"
+                   [style.color]="isSourceSelected(option) ? 'var(--p-primary-500)' : undefined"
+                ></i>
+                <span>{{ option.label }}</span>
+              </div>
+            </ng-template>
+          </p-multiselect>
+          <p-button
+            [attr.aria-label]="'home.search.button' | translate"
+            icon="pi pi-search"
+            [loading]="loading"
+            [disabled]="!canSearch"
+            [rounded]="true"
+            (onClick)="search()"
+          />
         </div>
-      </div>
-
-      <!-- Search Bar -->
-      <div class="flex w-full max-w-2xl gap-2">
-        <input
-          pInputText
-          type="text"
-          class="flex-1"
-          [placeholder]="'home.search.placeholder' | translate"
-          [(ngModel)]="searchInput"
-          (keydown)="onSearchKeydown($event)"
-        />
-        <p-button
-          [label]="'home.search.button' | translate"
-          icon="pi pi-search"
-          [loading]="loading"
-          [disabled]="!canSearch"
-          (onClick)="search()"
-        />
       </div>
     </div>
 

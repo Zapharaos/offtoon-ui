@@ -22,6 +22,7 @@
     "search": {
       "placeholder": "Search for a toon…",
       "button": "Search",
+      "sources-placeholder": "Sources",
       "sources-label": "Sources",
       "sources-hint": "Select at least one source",
       "custom-url-placeholder": "Custom URL (optional)",

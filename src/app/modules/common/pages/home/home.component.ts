@@ -13,7 +13,7 @@ import {NotificationUtilsService} from '@shared/services/notification-utils.serv
 import {DataViewModule} from 'primeng/dataview';
 import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
-import {CheckboxModule} from 'primeng/checkbox';
+import {MultiSelectModule} from 'primeng/multiselect';
 import {SkeletonModule} from 'primeng/skeleton';
 import {TagModule} from 'primeng/tag';
 import {SelectModule} from 'primeng/select';
@@ -23,7 +23,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 export interface SourceConfig {
   key: ApiSource;
   label: string;
-  selected: boolean;
 }
 
 export interface SortOption {
@@ -40,7 +39,7 @@ export interface SortOption {
     DataViewModule,
     ButtonModule,
     InputTextModule,
-    CheckboxModule,
+    MultiSelectModule,
     SkeletonModule,
     TagModule,
     SelectModule,
@@ -58,9 +57,11 @@ export class HomeComponent implements OnInit {
   selectedSort: SortOption | null = null;
 
   sources: SourceConfig[] = [
-    {key: ApiSource.SourceAsura, label: 'Asura', selected: true},
-    {key: ApiSource.SourceNato, label: 'Nato', selected: true},
+    {key: ApiSource.SourceAsura, label: 'Asura'},
+    {key: ApiSource.SourceNato, label: 'Nato'},
   ];
+
+  selectedSourcesList: SourceConfig[] = [];
 
   sortOptions: SortOption[] = [];
 
@@ -81,12 +82,15 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Default: all sources selected
+    this.selectedSourcesList = [...this.sources];
+
     const params = this.route.snapshot.queryParamMap;
     const q = params.get('q');
     const sourcesParam = params.getAll('sources');
 
     if (sourcesParam.length > 0) {
-      this.sources.forEach(s => s.selected = sourcesParam.includes(s.key));
+      this.selectedSourcesList = this.sources.filter(s => sourcesParam.includes(s.key));
     }
 
     if (q) {
@@ -95,12 +99,16 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  isSourceSelected(source: SourceConfig): boolean {
+    return this.selectedSourcesList.some(s => s.key === source.key);
+  }
+
   get selectedSources(): SourceConfig[] {
-    return this.sources.filter(s => s.selected);
+    return this.selectedSourcesList;
   }
 
   get canSearch(): boolean {
-    return this.searchInput.trim().length > 0 && this.selectedSources.length > 0;
+    return this.searchInput.trim().length > 0 && this.selectedSourcesList.length > 0;
   }
 
   get skeletonArray(): number[] {

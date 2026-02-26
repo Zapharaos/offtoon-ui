@@ -17,8 +17,6 @@ import {TagModule} from 'primeng/tag';
 import {TranslateModule} from '@ngx-translate/core';
 import {DatePipe} from '@angular/common';
 
-// TODO : searchbar review
-
 @Component({
   selector: 'app-toon',
   imports: [

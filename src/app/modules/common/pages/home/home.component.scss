@@ -1,3 +1,60 @@
+.searchbar {
+  border: 1px solid var(--p-inputtext-border-color);
+}
+
+::ng-deep .sources-select {
+  border: none !important;
+  background: transparent !important;
+
+  .p-multiselect-label {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .p-multiselect-overlay {
+    background-color: black;
+    border: none;
+  }
+
+  .p-overlay {
+    right: 0 !important;
+      left: initial !important;
+  }
+
+  .p-multiselect-list {
+    padding: 1rem;
+  }
+
+  .p-multiselect-option {
+    color: var(--text-secondary-color);
+    text-wrap: nowrap;
+  }
+
+  .p-multiselect-option.p-multiselect-option-selected {
+    background: transparent;
+    font-weight: 700;
+    color: var(--p-text-color);
+  }
+
+  .p-multiselect-option:not(.p-multiselect-option-selected):not(.p-disabled).p-focus,
+  .p-multiselect-option:not(.p-disabled):hover {
+    background-color: #0F1A11;
+  }
+
+  p-checkbox {
+    visibility: hidden;
+    position: absolute;
+  }
+}
+
+::ng-deep .sources-select:hover .p-multiselect-label {
+  color: var(--text-secondary-color);
+}
+::ng-deep .sources-select:hover .p-multiselect-label.p-placeholder {
+  color: var(--p-text-color)
+}
+
 .search-container {
   transition: min-height 0.5s ease-in-out;
 

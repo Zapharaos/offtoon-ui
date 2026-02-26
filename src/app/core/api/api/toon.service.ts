@@ -48,8 +48,8 @@ export class ToonService extends BaseService {
     }
 
     /**
-     * Download chapters of asura_chapter_response toon
-     * Starts an async download job for the requested chapters of asura_chapter_response toon. Returns asura_chapter_response runtime_id immediately. Connect to the WebSocket endpoint with that ID to receive live progress batches.
+     * Download chapters of a toon
+     * Starts an async download job for the requested chapters of a toon. Returns a runtime_id immediately. Connect to the WebSocket endpoint with that ID to receive live progress batches.
      * @endpoint post /api/v1/download
      * @param body Download request
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -115,8 +115,8 @@ export class ToonService extends BaseService {
     }
 
     /**
-     * Fetch asura_chapter_response toon
-     * Fetches the full details of asura_chapter_response toon from asura_chapter_response specific API source using the provided slug and optional custom base URL.
+     * Fetch a toon
+     * Fetches the full details of a toon from a specific API source using the provided slug.
      * @endpoint post /api/v1/fetch
      * @param body Fetch request
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -183,7 +183,7 @@ export class ToonService extends BaseService {
 
     /**
      * Search for toons
-     * Searches for toons matching the input query across the specified API sources. Supports optional custom base URLs per source.
+     * Searches for toons matching the input query across the specified API sources.
      * @endpoint post /api/v1/search
      * @param body Search request
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

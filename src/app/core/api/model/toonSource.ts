@@ -9,11 +9,11 @@
  */
 
 
-export const ApiSource = {
+export const ToonSource = {
     SourceAsura: 'asura',
     SourceNato: 'nato',
     Asura2: 'asura',
     Nato2: 'nato'
 } as const;
-export type ApiSource = typeof ApiSource[keyof typeof ApiSource];
+export type ToonSource = typeof ToonSource[keyof typeof ToonSource];
 

@@ -8,14 +8,9 @@
  * Do not edit the class manually.
  */
 import { ApiSource } from './apiSource';
-import { ApiCustomURL } from './apiCustomURL';
 
 
 export interface HandlersSearchRequest { 
-    /**
-     * CustomURLs allows the caller to provide one extra base URL per source. Each entry is tried before the client\'s own configured URLs. At most one entry per source is accepted.
-     */
-    custom_urls?: Array<ApiCustomURL>;
     /**
      * Input is the search query string.
      */

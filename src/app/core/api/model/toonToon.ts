@@ -8,9 +8,12 @@
  * Do not edit the class manually.
  */
 import { ToonChapter } from './toonChapter';
+import { ToonStatus } from './toonStatus';
+import { ToonSource } from './toonSource';
 
 
 export interface ToonToon { 
+    artist?: string;
     author?: string;
     /**
      * Chapters is populated only when fetching full toon details.
@@ -18,12 +21,28 @@ export interface ToonToon {
     chapters?: Array<ToonChapter>;
     cover_url?: string;
     description?: string;
+    genres?: Array<string>;
     /**
      * ID is the source-specific identifier.
      */
     id?: string;
-    source?: string;
+    /**
+     * Note holds the studio/publisher blurb that appears before the synopsis (e.g. \"[By the studio that brought you <Solo Leveling>...]\"). It is empty when the source does not provide such a note.
+     */
+    note?: string;
+    rating?: number;
+    serialization?: string;
+    /**
+     * Source is the API client that produced this toon.
+     */
+    source?: ToonSource;
     source_url?: string;
+    status?: ToonStatus;
     title?: string;
+    type?: string;
+    updated_on?: string;
 }
+export namespace ToonToon {
+}
+
 

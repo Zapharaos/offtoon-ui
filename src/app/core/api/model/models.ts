@@ -1,4 +1,3 @@
-export * from './apiCustomURL';
 export * from './apiSource';
 export * from './handlersDownloadRequest';
 export * from './handlersDownloadResponse';
@@ -8,4 +7,6 @@ export * from './renderErrorResponse';
 export * from './toonChapter';
 export * from './toonPage';
 export * from './toonSearchResult';
+export * from './toonSource';
+export * from './toonStatus';
 export * from './toonToon';

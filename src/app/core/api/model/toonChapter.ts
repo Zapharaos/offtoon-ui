@@ -11,6 +11,7 @@ import { ToonPage } from './toonPage';
 
 
 export interface ToonChapter { 
+    date?: string;
     /**
      * ID is the source-specific identifier.
      */
@@ -20,7 +21,7 @@ export interface ToonChapter {
      */
     number?: number;
     /**
-     * Pages is populated only when downloading asura_chapter_response chapter\'s images.
+     * Pages is populated only when downloading a chapter\'s images.
      */
     pages?: Array<ToonPage>;
     title?: string;

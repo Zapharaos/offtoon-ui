@@ -7,6 +7,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ToonStatus } from './toonStatus';
+import { ToonSource } from './toonSource';
 
 
 export interface ToonSearchResult { 
@@ -16,10 +18,25 @@ export interface ToonSearchResult {
      */
     id?: string;
     /**
-     * Source is the name of the API client that produced this result.
+     * LastChapter is the latest chapter number available, 0 if unknown.
      */
-    source?: string;
+    last_chapter?: number;
+    /**
+     * Rating is the community rating (e.g. 9.3), 0 if unknown.
+     */
+    rating?: number;
+    /**
+     * Source is the API client that produced this result.
+     */
+    source?: ToonSource;
     source_url?: string;
+    /**
+     * Status is the publication status of the toon.
+     */
+    status?: ToonStatus;
     title?: string;
 }
+export namespace ToonSearchResult {
+}
+
 

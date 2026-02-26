@@ -19,10 +19,6 @@ export interface HandlersFetchRequest {
      * Source is the API client to use (e.g. \"asura\", \"nato\").
      */
     source?: ApiSource;
-    /**
-     * URL is an optional custom base URL to try before the client\'s configured URLs.
-     */
-    url?: string;
 }
 export namespace HandlersFetchRequest {
 }

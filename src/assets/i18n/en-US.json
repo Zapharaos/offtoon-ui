@@ -27,6 +27,15 @@
       "custom-url-placeholder": "Custom URL (optional)",
       "results-count": "{{count}} result(s) found",
       "no-results": "No results found. Try a different query.",
+      "sort-placeholder": "Sort by",
+      "sort": {
+        "az": "A → Z",
+        "source": "Provider",
+        "status": "Status",
+        "chapters-asc": "Chapters ↑",
+        "chapters-desc": "Chapters ↓"
+      },
+      "last-chapter": "Chapter {{count}}",
       "open": "Open"
     }
   },
@@ -36,6 +45,11 @@
     "chapters": "Chapters",
     "selected-count": "{{count}} chapter(s) selected",
     "not-found": "Toon not found or an error occurred.",
+    "meta": {
+      "author": "Author",
+      "artist": "Artist",
+      "updated": "Updated"
+    },
     "table": {
       "number": "#",
       "title": "Title",

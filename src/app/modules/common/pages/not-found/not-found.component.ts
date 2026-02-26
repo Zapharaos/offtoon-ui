@@ -1,16 +1,12 @@
 import { Component } from '@angular/core';
 import {BasicLayoutComponent} from '@shared/layouts/basic-layout/basic-layout.component';
-import {NgOptimizedImage} from '@angular/common';
 import {Button} from 'primeng/button';
-import {TranslatePipe, TranslateService} from '@ngx-translate/core';
-import {Router} from '@angular/router';
-import {LocaleService} from '@core/services/locale.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-not-found',
   imports: [
     BasicLayoutComponent,
-    NgOptimizedImage,
     Button,
     TranslatePipe
   ],

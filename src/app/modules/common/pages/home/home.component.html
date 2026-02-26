@@ -15,27 +15,15 @@
           </span>
         </p>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-row gap-4 flex-wrap">
           @for (source of sources; track source.key) {
-            <div class="flex items-center gap-3 flex-wrap">
-              <!-- Checkbox -->
-              <div class="flex items-center gap-2">
-                <p-checkbox
-                  [(ngModel)]="source.selected"
-                  [binary]="true"
-                  [inputId]="'source-' + source.key"
-                />
-                <label [for]="'source-' + source.key" class="cursor-pointer select-none">{{ source.label }}</label>
-              </div>
-              <!-- Custom URL input -->
-              <input
-                pInputText
-                type="url"
-                class="flex-1 min-w-[200px] text-sm"
-                [placeholder]="'home.search.custom-url-placeholder' | translate"
-                [(ngModel)]="source.customUrl"
-                [disabled]="!source.selected"
+            <div class="flex items-center gap-2">
+              <p-checkbox
+                [(ngModel)]="source.selected"
+                [binary]="true"
+                [inputId]="'source-' + source.key"
               />
+              <label [for]="'source-' + source.key" class="cursor-pointer select-none">{{ source.label }}</label>
             </div>
           }
         </div>
@@ -83,15 +71,37 @@
           <p class="text-lg">{{ 'home.search.no-results' | translate }}</p>
         </div>
       } @else {
-        <p class="text-sm text-surface-400 mt-8 mb-4">
-          {{ 'home.search.results-count' | translate : { count: results.length } }}
-        </p>
+        <!-- Toolbar: count + sort -->
+        <div class="flex items-center justify-between mt-8 mb-4 gap-4 flex-wrap">
+          <p class="text-sm text-surface-400">
+            {{ 'home.search.results-count' | translate : { count: results.length } }}
+          </p>
+          <p-select
+            [options]="sortOptions"
+            [(ngModel)]="selectedSort"
+            optionLabel="label"
+            [placeholder]="'home.search.sort-placeholder' | translate"
+            styleClass="w-full sm:w-auto">
+            <ng-template #selectedItem let-selectedOption>
+              <div class="flex flex-row flex-nowrap justify-center items-center gap-3">
+                              <span class="text-light">
+                                {{'home.search.sort-placeholder' | translate}}
+                              </span>
+                @if (selectedOption) {
+                  <span class="text-black dark:text-white font-bold text-base md:text-md">
+                                  {{ selectedOption.label }}
+                                </span>
+                }
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
 
-        <p-dataview [value]="results" layout="grid">
+        <p-dataview [value]="sortedResults" layout="grid">
           <ng-template #grid let-items>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               @for (result of items; track result.id) {
-                <div class="flex flex-col gap-2 rounded-xl overflow-hidden bg-surface-50 dark:bg-surface-800 shadow hover:shadow-lg transition-shadow cursor-pointer group"
+                <div class="flex flex-col rounded-xl overflow-hidden bg-surface-50 dark:bg-surface-800 shadow hover:shadow-lg transition-shadow cursor-pointer group h-full"
                      (click)="navigateToToon(result)"
                      [title]="result.title ?? ''">
 
@@ -112,15 +122,30 @@
 
                     <!-- Source badge -->
                     <p-tag
-                      [value]="result.source ?? ''"
+                      [value]="sourceLabel(result.source)"
                       severity="secondary"
                       styleClass="absolute top-2 left-2 text-xs uppercase"
                     />
                   </div>
 
                   <!-- Info -->
-                  <div class="px-2 pb-3 flex flex-col gap-1">
-                    <p class="text-sm font-semibold leading-tight line-clamp-2">{{ result.title }}</p>
+                  <div class="px-2 py-3 flex flex-col flex-1 gap-1">
+                    <p class="text-sm font-semibold leading-tight line-clamp-2 flex-1">{{ result.title }}</p>
+                    <div class="flex flex-row justify-between items-center flex-nowrap">
+                      @if (result.last_chapter) {
+                        <p class="text-xs text-surface-400">
+                          {{ 'home.search.last-chapter' | translate : { count: result.last_chapter } }}
+                        </p>
+                      }
+                      <!-- Status badge -->
+                      @if (result.status) {
+                        <p-tag
+                          [value]="statusLabel(result.status)"
+                          [severity]="statusSeverity(result.status)"
+                          styleClass="text-xs"
+                        />
+                      }
+                    </div>
                   </div>
                 </div>
               }

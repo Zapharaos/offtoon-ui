@@ -4,8 +4,9 @@ import {FormsModule} from '@angular/forms';
 import {ScrollToTopComponent} from '@shared/components/scroll-to-top/scroll-to-top.component';
 import {ToonService} from '@core/api/api/toon.service';
 import {ApiSource} from '@core/api/model/apiSource';
-import {ApiCustomURL} from '@core/api/model/apiCustomURL';
 import {ToonSearchResult} from '@core/api/model/toonSearchResult';
+import {ToonSource} from '@core/api/model/toonSource';
+import {ToonStatus} from '@core/api/model/toonStatus';
 import {HandlersSearchRequest} from '@core/api/model/handlersSearchRequest';
 import {finalize} from 'rxjs';
 import {NotificationUtilsService} from '@shared/services/notification-utils.service';
@@ -15,14 +16,19 @@ import {InputTextModule} from 'primeng/inputtext';
 import {CheckboxModule} from 'primeng/checkbox';
 import {SkeletonModule} from 'primeng/skeleton';
 import {TagModule} from 'primeng/tag';
-import {TranslateModule} from '@ngx-translate/core';
+import {SelectModule} from 'primeng/select';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 
 export interface SourceConfig {
   key: ApiSource;
   label: string;
   selected: boolean;
-  customUrl: string;
+}
+
+export interface SortOption {
+  label: string;
+  value: 'az' | 'source' | 'chapters_asc' | 'chapters_desc' | 'status';
 }
 
 @Component({
@@ -37,6 +43,7 @@ export interface SourceConfig {
     CheckboxModule,
     SkeletonModule,
     TagModule,
+    SelectModule,
     TranslateModule,
   ],
   templateUrl: './home.component.html',
@@ -48,17 +55,29 @@ export class HomeComponent {
   loading = false;
   searched = false;
   results: ToonSearchResult[] = [];
+  selectedSort: SortOption | null = null;
 
   sources: SourceConfig[] = [
-    {key: ApiSource.SourceAsura, label: 'Asura', selected: true, customUrl: ''},
-    {key: ApiSource.SourceNato, label: 'Nato', selected: true, customUrl: ''},
+    {key: ApiSource.SourceAsura, label: 'Asura', selected: true},
+    {key: ApiSource.SourceNato, label: 'Nato', selected: true},
   ];
+
+  sortOptions: SortOption[] = [];
 
   constructor(
     private toonService: ToonService,
     private notificationUtils: NotificationUtilsService,
     private router: Router,
-  ) {}
+    private translate: TranslateService,
+  ) {
+    this.sortOptions = [
+      {label: this.translate.instant('home.search.sort.az'),            value: 'az'},
+      {label: this.translate.instant('home.search.sort.source'),        value: 'source'},
+      {label: this.translate.instant('home.search.sort.status'),        value: 'status'},
+      {label: this.translate.instant('home.search.sort.chapters-asc'),  value: 'chapters_asc'},
+      {label: this.translate.instant('home.search.sort.chapters-desc'), value: 'chapters_desc'},
+    ];
+  }
 
   get selectedSources(): SourceConfig[] {
     return this.sources.filter(s => s.selected);
@@ -72,17 +91,71 @@ export class HomeComponent {
     return Array(6).fill(0);
   }
 
+  get sortedResults(): ToonSearchResult[] {
+    if (!this.selectedSort) return this.results;
+    const copy = [...this.results];
+    switch (this.selectedSort.value) {
+      case 'az':
+        return copy.sort((a, b) => (a.title ?? '').localeCompare(b.title ?? ''));
+      case 'source':
+        return copy.sort((a, b) => (a.source ?? '').localeCompare(b.source ?? ''));
+      case 'status': {
+        const order: Record<string, number> = {
+          [ToonStatus.StatusOngoing]:   0,
+          [ToonStatus.StatusCompleted]: 1,
+          [ToonStatus.StatusSeasonEnd]: 2,
+          [ToonStatus.StatusHiatus]:    3,
+          [ToonStatus.StatusDropped]:   4,
+          [ToonStatus.StatusUnknown]:   5,
+        };
+        return copy.sort((a, b) =>
+          (order[a.status ?? ''] ?? 99) - (order[b.status ?? ''] ?? 99)
+        );
+      }
+      case 'chapters_asc':
+        return copy.sort((a, b) => (a.last_chapter ?? 0) - (b.last_chapter ?? 0));
+      case 'chapters_desc':
+        return copy.sort((a, b) => (b.last_chapter ?? 0) - (a.last_chapter ?? 0));
+    }
+  }
+
+  sourceLabel(source: ToonSource | string | undefined): string {
+    switch (source) {
+      case ToonSource.SourceAsura: return 'Asura';
+      case ToonSource.SourceNato: return 'Nato';
+      default: return source ?? '';
+    }
+  }
+
+  statusSeverity(status: ToonStatus | string | undefined): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
+    switch (status) {
+      case ToonStatus.StatusOngoing:    return 'info';
+      case ToonStatus.StatusCompleted:  return 'success';
+      case ToonStatus.StatusHiatus:     return 'warn';
+      case ToonStatus.StatusDropped:    return 'danger';
+      case ToonStatus.StatusSeasonEnd:  return 'secondary';
+      default:                          return 'secondary';
+    }
+  }
+
+  statusLabel(status: ToonStatus | string | undefined): string {
+    switch (status) {
+      case ToonStatus.StatusOngoing:    return 'Ongoing';
+      case ToonStatus.StatusCompleted:  return 'Completed';
+      case ToonStatus.StatusHiatus:     return 'Hiatus';
+      case ToonStatus.StatusDropped:    return 'Dropped';
+      case ToonStatus.StatusSeasonEnd:  return 'Season End';
+      case ToonStatus.StatusUnknown:    return 'Unknown';
+      default:                          return status ?? '';
+    }
+  }
+
   search(): void {
     if (!this.canSearch) return;
-
-    const customUrls: ApiCustomURL[] = this.selectedSources
-      .filter(s => s.customUrl.trim().length > 0)
-      .map(s => ({source: s.key, url: s.customUrl.trim()}));
 
     const body: HandlersSearchRequest = {
       input: this.searchInput.trim(),
       sources: this.selectedSources.map(s => s.key),
-      ...(customUrls.length > 0 ? {custom_urls: customUrls} : {}),
     };
 
     this.loading = true;
@@ -111,10 +184,6 @@ export class HomeComponent {
 
   navigateToToon(result: ToonSearchResult): void {
     if (!result.id || !result.source) return;
-    const sourceConfig = this.sources.find(s => s.key === result.source);
-    const customUrl = sourceConfig?.customUrl?.trim();
-    this.router.navigate(['/toon', result.source, result.id], {
-      ...(customUrl ? {queryParams: {url: customUrl}} : {}),
-    });
+    this.router.navigate(['/toon', result.source, result.id]);
   }
 }

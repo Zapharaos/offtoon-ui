@@ -31,14 +31,6 @@
           <p-skeleton height="4rem"/>
         </div>
       </div>
-
-      <!-- Table skeleton -->
-      <div class="mt-10 flex flex-col gap-3">
-        <p-skeleton height="2.5rem"/>
-        @for (row of skeletonArray; track row) {
-          <p-skeleton height="2rem"/>
-        }
-      </div>
     }
 
     <!-- ─── Loaded State ─── -->
@@ -64,21 +56,43 @@
         </div>
 
         <!-- Details -->
-        <div class="flex flex-col gap-3">
-          <h2 class="text-3xl font-bold leading-tight">{{ toon.title }}</h2>
+        <div class="flex flex-col gap-4 flex-1">
 
-          <div class="flex items-center gap-2">
-            <p-tag [value]="toon.source ?? ''" severity="secondary" styleClass="uppercase text-xs"/>
-            @if (toon.author) {
-              <span class="text-sm text-surface-500">{{ toon.author }}</span>
+          <div class="flex flex-wrap items-center gap-2">
+            <p-tag [value]="sourceLabel(toon.source)" severity="secondary" styleClass="uppercase text-xs"/>
+            @if (toon.status) {
+              <p-tag [value]="statusLabel(toon.status)" [severity]="statusSeverity(toon.status)" styleClass="text-xs"/>
             }
           </div>
 
-          @if (toon.description) {
-            <p class="text-sm text-surface-600 dark:text-surface-300 leading-relaxed max-w-2xl">
-              {{ toon.description }}
-            </p>
-          }
+          <!-- Title + source badge -->
+          <h2 class="text-3xl font-bold leading-tight">{{ toon.title }}</h2>
+
+          <!-- Art: author, artist -->
+          <div class="flex flex-col gap-x-6 gap-y-1 text-sm">
+            @if (toon.author) {
+              <div class="flex gap-2">
+                <span class="text-surface-400 shrink-0">{{ 'toon.meta.author' | translate }}</span>
+                <span class="font-medium">{{ toon.author }}</span>
+              </div>
+            }
+            @if (toon.artist) {
+              <div class="flex gap-2">
+                <span class="text-surface-400 shrink-0">{{ 'toon.meta.artist' | translate }}</span>
+                <span class="font-medium">{{ toon.artist }}</span>
+              </div>
+            }
+          </div>
+
+          <!-- Last chapter -->
+          <div class="flex flex-col gap-x-6 gap-y-1 text-sm">
+            @if (toon.updated_on) {
+              <div class="flex gap-2">
+                <span class="text-surface-400 shrink-0">{{ 'toon.meta.updated' | translate }}</span>
+                <span class="font-medium">{{ toon.updated_on }}</span>
+              </div>
+            }
+          </div>
 
           @if (toon.source_url) {
             <a
@@ -93,14 +107,18 @@
           }
         </div>
       </div>
+    }
 
-      <!-- ─── Chapters Table ─── -->
-      <div class="flex items-center justify-between mb-3">
+    <!-- ─── Chapters Table (always rendered; uses built-in skeleton while loading) ─── -->
+    @if (!(!loading && !toon)) {
+      <div class="flex items-center justify-between mb-3 mt-10">
         <h3 class="text-lg font-semibold">
           {{ 'toon.chapters' | translate }}
-          <span class="text-sm font-normal text-surface-400 ml-2">
-            ({{ toon.chapters?.length ?? 0 }})
-          </span>
+          @if (!loading) {
+            <span class="text-sm font-normal text-surface-400 ml-2">
+              ({{ toon?.chapters?.length ?? 0 }})
+            </span>
+          }
         </h3>
 
         @if (selectedChapters.length > 0) {
@@ -111,10 +129,12 @@
       </div>
 
       <p-table
-        [value]="toon.chapters ?? []"
+        [value]="toon?.chapters ?? []"
         [(selection)]="selectedChapters"
         dataKey="id"
-        [paginator]="(toon.chapters?.length ?? 0) > 20"
+        [loading]="loading"
+        [showLoader]="false"
+        [paginator]="(toon?.chapters?.length ?? 0) > 20"
         [rows]="20"
         [rowsPerPageOptions]="[20, 50, 100]"
         styleClass="p-datatable-sm"
@@ -138,6 +158,18 @@
           </tr>
         </ng-template>
 
+        <ng-template #loadingbody>
+          @for (row of skeletonArray; track row) {
+            <tr>
+              <td><p-skeleton/></td>
+              <td><p-skeleton width="3rem"/></td>
+              <td><p-skeleton/></td>
+              <td><p-skeleton width="6rem"/></td>
+              <td><p-skeleton width="2rem"/></td>
+            </tr>
+          }
+        </ng-template>
+
         <ng-template #body let-chapter>
           <tr [pSelectableRow]="chapter">
             <td>
@@ -146,7 +178,7 @@
             <td class="font-mono text-sm">
               #{{ chapter.number }}
             </td>
-            <td class="text-sm">
+            <td class="text-sm table-main">
               {{ chapter.title || ('toon.table.no-title' | translate) }}
             </td>
             <td class="text-sm text-surface-400">

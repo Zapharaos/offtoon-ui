@@ -1,23 +1,14 @@
 :root {
-  --p-datatable-header-background: transparent;
-  --p-datatable-header-cell-background: transparent;
-  --p-datatable-header-cell-selected-color: var(--p-text-color);
   --p-datatable-row-background: transparent;
+  --p-datatable-row-hover-background: color-mix(in srgb,var(--p-primary-color),transparent 97.5%);
   --p-datatable-row-color: var(--text-secondary-color);
   --p-datatable-row-hover-color: var(--text-secondary-hover-color);
   --p-datatable-column-title-font-weight: 700;
 
   --p-paginator-background: transparent;
-
-  // Light theme
-  --p-datatable-header-cell-selected-background: color-mix(in srgb,var(--p-primary-color),transparent 95%);
-  --p-datatable-header-cell-hover-background: color-mix(in srgb,var(--p-primary-color),transparent 97.5%);
-  --p-datatable-row-hover-background: color-mix(in srgb,var(--p-primary-color),transparent 97.5%);
-  --p-datatable-sorticon-hover-color: var(--p-primary-900);
-  --p-datatable-sorticon-active-color: var(--p-primary-color);
 }
 
-.table-brick-name {
+.table-main {
   color: var(--p-text-hover-muted-color);
   font-weight: 800;
 }

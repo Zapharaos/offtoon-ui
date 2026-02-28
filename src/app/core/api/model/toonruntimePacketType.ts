@@ -13,6 +13,9 @@ export const ToonruntimePacketType = {
     PacketTypeInit: 'init',
     PacketTypeFatal: 'fatal',
     PacketTypeProgress: 'progress',
+    PacketTypeArchiving: 'archiving',
+    PacketTypeZipping: 'zipping',
+    PacketTypeChapterReport: 'chapter_report',
     PacketTypeCompleted: 'completed'
 } as const;
 export type ToonruntimePacketType = typeof ToonruntimePacketType[keyof typeof ToonruntimePacketType];

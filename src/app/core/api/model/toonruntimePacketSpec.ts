@@ -7,18 +7,24 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ToonruntimePacketZipping } from './toonruntimePacketZipping';
 import { ToonruntimePacket } from './toonruntimePacket';
 import { ToonruntimePacketCompleted } from './toonruntimePacketCompleted';
 import { ToonruntimePacketProgress } from './toonruntimePacketProgress';
 import { ToonruntimePacketInit } from './toonruntimePacketInit';
+import { ToonruntimePacketArchiving } from './toonruntimePacketArchiving';
 import { ToonruntimePacketFatal } from './toonruntimePacketFatal';
+import { ToonruntimePacketChapterReport } from './toonruntimePacketChapterReport';
 
 
 export interface ToonruntimePacketSpec { 
     packet?: ToonruntimePacket;
+    packetArchiving?: ToonruntimePacketArchiving;
+    packetChapterReport?: ToonruntimePacketChapterReport;
     packetCompleted?: ToonruntimePacketCompleted;
     packetFatal?: ToonruntimePacketFatal;
     packetInit?: ToonruntimePacketInit;
     packetProgress?: ToonruntimePacketProgress;
+    packetZipping?: ToonruntimePacketZipping;
 }
 

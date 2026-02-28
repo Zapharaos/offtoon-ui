@@ -1,4 +1,7 @@
 export * from './apiSource';
+export * from './archiverChapterStatus';
+export * from './archiverImageReport';
+export * from './archiverImageStatus';
 export * from './handlersDownloadRequest';
 export * from './handlersDownloadResponse';
 export * from './handlersFetchRequest';
@@ -13,6 +16,7 @@ export * from './toonStatus';
 export * from './toonToon';
 export * from './toonruntimePacket';
 export * from './toonruntimePacketArchiving';
+export * from './toonruntimePacketChapterReport';
 export * from './toonruntimePacketCompleted';
 export * from './toonruntimePacketFatal';
 export * from './toonruntimePacketInit';

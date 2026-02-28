@@ -11,9 +11,7 @@
 
 export const ApiSource = {
     SourceAsura: 'asura',
-    SourceNato: 'nato',
-    Asura2: 'asura',
-    Nato2: 'nato'
+    Asura2: 'asura'
 } as const;
 export type ApiSource = typeof ApiSource[keyof typeof ApiSource];
 

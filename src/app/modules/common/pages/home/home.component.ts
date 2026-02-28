@@ -58,7 +58,6 @@ export class HomeComponent implements OnInit {
 
   sources: SourceConfig[] = [
     {key: ApiSource.SourceAsura, label: 'Asura'},
-    {key: ApiSource.SourceNato, label: 'Nato'},
   ];
 
   selectedSourcesList: SourceConfig[] = [];
@@ -146,7 +145,6 @@ export class HomeComponent implements OnInit {
   sourceLabel(source: ToonSource | string | undefined): string {
     switch (source) {
       case ToonSource.SourceAsura: return 'Asura';
-      case ToonSource.SourceNato: return 'Nato';
       default: return source ?? '';
     }
   }

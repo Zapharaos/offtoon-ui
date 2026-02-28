@@ -85,7 +85,6 @@ export class ToonComponent implements OnInit {
   sourceLabel(source: ToonSource | string | undefined): string {
     switch (source) {
       case ToonSource.SourceAsura: return 'Asura';
-      case ToonSource.SourceNato:  return 'Nato';
       default:                     return source ?? '';
     }
   }

@@ -11,9 +11,7 @@
 
 export const ToonSource = {
     SourceAsura: 'asura',
-    SourceNato: 'nato',
-    Asura2: 'asura',
-    Nato2: 'nato'
+    Asura2: 'asura'
 } as const;
 export type ToonSource = typeof ToonSource[keyof typeof ToonSource];
 

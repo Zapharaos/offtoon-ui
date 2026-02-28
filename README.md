@@ -2,6 +2,8 @@
 
 **Offtoon** is a modern web application for searching, browsing, and downloading webtoons and manga chapters from various online sources. It provides a streamlined interface to search for toons, explore chapter lists, and download content in multiple formats (PDF, CBZ, or raw images) with real-time progress tracking via WebSocket.
 
+![img.png](docs/demo.png)
+
 ## 🎯 What is Offtoon?
 
 Offtoon helps users:

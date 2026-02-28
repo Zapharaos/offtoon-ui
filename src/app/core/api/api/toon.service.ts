@@ -30,6 +30,8 @@ import { RenderErrorResponse } from '../model/renderErrorResponse';
 import { ToonSearchResult } from '../model/toonSearchResult';
 // @ts-ignore
 import { ToonToon } from '../model/toonToon';
+// @ts-ignore
+import { ToonruntimePacketSpec } from '../model/toonruntimePacketSpec';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -49,7 +51,7 @@ export class ToonService extends BaseService {
 
     /**
      * Download chapters of a toon
-     * Starts an async download job for the requested chapters of a toon. Returns a runtime_id immediately. Connect to the WebSocket endpoint with that ID to receive live progress batches.
+     * Starts an async download job for the requested chapters of a toon. Returns a runtime_id immediately. Connect to the WebSocket endpoint with that ID to receive live progress batches. When the PacketCompleted is received, fetch the archive via GET /api/v1/download/{runtimeID}/archive.
      * @endpoint post /api/v1/download
      * @param body Download request
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -104,6 +106,109 @@ export class ToonService extends BaseService {
             {
                 context: localVarHttpContext,
                 body: body,
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Retrieve the assembled archive for a completed download job
+     * Returns the ZIP archive built after a download job completes. The archive URL is provided in the PacketCompleted WebSocket message. This endpoint can only be called once per job — the file is removed from memory after it is served.
+     * @endpoint get /api/v1/download/{runtimeID}/archive
+     * @param runtimeID Runtime ID returned by POST /download
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public apiV1DownloadRuntimeIDArchiveGet(runtimeID: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/zip', context?: HttpContext, transferCache?: boolean}): Observable<Blob>;
+    public apiV1DownloadRuntimeIDArchiveGet(runtimeID: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/zip', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Blob>>;
+    public apiV1DownloadRuntimeIDArchiveGet(runtimeID: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/zip', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Blob>>;
+    public apiV1DownloadRuntimeIDArchiveGet(runtimeID: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/zip', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (runtimeID === null || runtimeID === undefined) {
+            throw new Error('Required parameter runtimeID was null or undefined when calling apiV1DownloadRuntimeIDArchiveGet.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/zip'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let localVarPath = `/api/v1/download/${this.configuration.encodeParam({name: "runtimeID", value: runtimeID, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/archive`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request('get', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: "blob",
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Connect to a download job via WebSocket
+     * Upgrades the HTTP connection to a WebSocket and streams live progress packets for the given download runtime. \\n\\nPacket sequence:\\n  1. PacketInit — connection confirmed.\\n  2. PacketProgress (phase&#x3D;\&quot;chapters\&quot;) — chapter metadata scraped; items[] contains chapter objects with page URLs.\\n  3. PacketProgress (phase&#x3D;\&quot;images\&quot;) — page images being downloaded; items&#x3D;[], total&#x3D;image count, done increments per image.\\n  4. PacketCompleted — archive ready; fetch it via archive_url.\\n  OR PacketFatal — something went wrong; step indicates the failing stage.
+     * @endpoint get /api/v1/download/{runtimeID}/ws
+     * @param runtimeID Runtime ID returned by POST /download
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public apiV1DownloadRuntimeIDWsGet(runtimeID: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public apiV1DownloadRuntimeIDWsGet(runtimeID: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public apiV1DownloadRuntimeIDWsGet(runtimeID: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public apiV1DownloadRuntimeIDWsGet(runtimeID: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (runtimeID === null || runtimeID === undefined) {
+            throw new Error('Required parameter runtimeID was null or undefined when calling apiV1DownloadRuntimeIDWsGet.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v1/download/${this.configuration.encodeParam({name: "runtimeID", value: runtimeID, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/ws`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('get', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,

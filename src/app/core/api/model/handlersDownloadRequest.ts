@@ -16,6 +16,10 @@ export interface HandlersDownloadRequest {
      */
     chapter_ids?: Array<string>;
     /**
+     * Format controls the per-chapter output format. Accepted values: \"pdf\" (default), \"cbz\", \"images\".
+     */
+    format?: string;
+    /**
      * Slug is the source-specific toon slug.
      */
     slug?: string;

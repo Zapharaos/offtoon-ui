@@ -1,0 +1,163 @@
+<app-basic-layout>
+  <div class="docs flex-1 container mx-auto px-6 flex flex-col">
+    <section>
+      <h1>{{ 'privacy.title' | translate }}</h1>
+      <div class="wrapper">
+        <span class="text-light">
+          {{ 'privacy.last-updated' | translate }}
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <h2>{{ 'privacy.agreement.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>
+          {{ 'privacy.agreement.notice' | translate }}
+        </div>
+        <ul>
+          <li [innerHTML]="'privacy.agreement.website' | translate"></li>
+        </ul>
+        <div [innerHTML]="'privacy.agreement.questions' | translate"></div>
+      </div>
+    </section>
+
+    <section id="toc">
+      <h2>{{ 'privacy.toc.title' | translate }}</h2>
+      <div class="wrapper links">
+        <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+           (click)="scrollToSection('infocollect', $event)">
+          {{ 'privacy.toc.info-collect' | translate }}
+        </a>
+        <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+           (click)="scrollToSection('cookies', $event)">
+          {{ 'privacy.toc.cookies' | translate }}
+        </a>
+        <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+           (click)="scrollToSection('thirdparty', $event)">
+          {{ 'privacy.toc.third-party' | translate }}
+        </a>
+        <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+           (click)="scrollToSection('externallinks', $event)">
+          {{ 'privacy.toc.external-links' | translate }}
+        </a>
+        <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+           (click)="scrollToSection('userrights', $event)">
+          {{ 'privacy.toc.user-rights' | translate }}
+        </a>
+        <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+           (click)="scrollToSection('policyupdates', $event)">
+          {{ 'privacy.toc.policy-updates' | translate }}
+        </a>
+        <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+           (click)="scrollToSection('contact', $event)">
+          {{ 'privacy.toc.contact' | translate }}
+        </a>
+      </div>
+    </section>
+
+    <section id="infocollect">
+      <h2>{{ 'privacy.info-collect.title' | translate }}</h2>
+      <div class="wrapper">
+        <div class="sub-section" id="personalinfo">
+          <h3>{{ 'privacy.info-collect.personal.title' | translate }}</h3>
+          <div class="wrapper">
+            <div>
+              {{ 'privacy.info-collect.personal.none' | translate }}
+            </div>
+            <div>
+              <span class="font-medium">{{ 'privacy.info-collect.personal.particular' | translate }}</span>
+              <ul>
+                <li>
+                  {{ 'privacy.info-collect.personal.no-accounts' | translate }}
+                </li>
+                <li>
+                  {{ 'privacy.info-collect.personal.no-forms' | translate }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="sub-section">
+          <h3>{{ 'privacy.info-collect.automatic.title' | translate }}</h3>
+          <div class="wrapper">
+            {{ 'privacy.info-collect.automatic.intro' | translate }}
+            <ul>
+              <li>
+                {{ 'privacy.info-collect.automatic.no-tracking' | translate }}
+              </li>
+              <li>
+                {{ 'privacy.info-collect.automatic.no-analytics' | translate }}
+              </li>
+              <li>
+                {{ 'privacy.info-collect.automatic.no-advertising' | translate }}
+              </li>
+              <li>
+                {{ 'privacy.info-collect.automatic.no-profiling' | translate }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cookies">
+      <h2>{{ 'privacy.cookies.title' | translate }}</h2>
+      <div class="wrapper">
+        {{ 'privacy.cookies.description' | translate }}
+      </div>
+    </section>
+
+    <section id="thirdparty">
+      <h2>{{ 'privacy.third-party.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>
+          {{ 'privacy.third-party.intro' | translate }}
+        </div>
+        <div>
+          {{ 'privacy.third-party.support' | translate }}
+        </div>
+        <div>
+          {{ 'privacy.third-party.disclaimer' | translate }}
+        </div>
+      </div>
+    </section>
+
+    <section id="externallinks">
+      <h2>{{ 'privacy.external-links.title' | translate }}</h2>
+      <div class="wrapper">
+        {{ 'privacy.external-links.description' | translate }}
+      </div>
+    </section>
+
+    <section id="userrights">
+      <h2>{{ 'privacy.user-rights.title' | translate }}</h2>
+      <div class="wrapper">
+        {{ 'privacy.user-rights.description' | translate }}
+      </div>
+    </section>
+
+    <section id="policyupdates">
+      <h2>{{ 'privacy.policy-updates.title' | translate }}</h2>
+      <div class="wrapper">
+        {{ 'privacy.policy-updates.description' | translate }}
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>{{ 'privacy.contact.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>
+          {{ 'privacy.contact.intro' | translate }}
+        </div>
+        <div>
+          <div>{{ 'privacy.contact.company' | translate }}</div>
+          <a href="mailto:contact@freits.fr" [innerHTML]="'privacy.contact.email' | translate"></a>
+          <div>{{ 'privacy.contact.country' | translate }}</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <app-scroll-to-top />
+</app-basic-layout>

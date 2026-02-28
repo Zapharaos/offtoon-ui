@@ -1,0 +1,223 @@
+<app-basic-layout>
+  <div class="docs flex-1 container mx-auto px-6 flex flex-col">
+    <section>
+      <h1>{{ 'terms.title' | translate }}</h1>
+      <div class="wrapper">
+        <span class="text-light">
+          {{ 'terms.last-updated' | translate }}
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <h2>{{ 'terms.agreement.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>{{ 'terms.agreement.company' | translate }}</div>
+        <div [innerHTML]="'terms.agreement.website' | translate"></div>
+        <div [innerHTML]="'terms.agreement.contact' | translate"></div>
+        <div>{{ 'terms.agreement.binding' | translate }}</div>
+        <div>{{ 'terms.agreement.print' | translate }}</div>
+      </div>
+    </section>
+
+    <section id="toc">
+        <h2>{{ 'terms.toc.title' | translate }}</h2>
+        <div class="wrapper links">
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('services', $event)">
+            {{ 'terms.toc.services' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('tpdsc', $event)">
+            {{ 'terms.toc.tpdsc' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('ip', $event)">
+            {{ 'terms.toc.ip' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('license', $event)">
+            {{ 'terms.toc.license' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('acceptableuse', $event)">
+            {{ 'terms.toc.acceptable-use' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('noprofessionaladvice', $event)">
+            {{ 'terms.toc.no-professional-advice' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('externallinks', $event)">
+            {{ 'terms.toc.external-links' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('disclaimer', $event)">
+            {{ 'terms.toc.disclaimer' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('privacy', $event)">
+            {{ 'terms.toc.privacy' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('modifications', $event)">
+            {{ 'terms.toc.modifications' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('law', $event)">
+            {{ 'terms.toc.law' | translate }}
+          </a>
+          <a class="w-fit p-ripple p-button p-component p-button-link p-button-label p-0 hover:underline cursor-pointer"
+             (click)="scrollToSection('contact', $event)">
+            {{ 'terms.toc.contact' | translate }}
+          </a>
+        </div>
+    </section>
+
+    <section id="services">
+      <h2>{{ 'terms.services.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>{{ 'terms.services.description' | translate }}</div>
+        <div>{{ 'terms.services.data-source' | translate }}</div>
+        <div>{{ 'terms.services.purpose' | translate }}</div>
+        <div>{{ 'terms.services.support' | translate }}</div>
+      </div>
+    </section>
+
+    <section id="tpdsc">
+      <h2>{{ 'terms.tpdsc.title' | translate }}</h2>
+      <div class="wrapper">
+        <div class="sub-section">
+          <h3>{{ 'terms.tpdsc.asura.title' | translate }}</h3>
+          <div class="wrapper">
+            <div>{{ 'terms.tpdsc.asura.usage' | translate }}</div>
+            <div>{{ 'terms.tpdsc.asura.disclaimer' | translate }}</div>
+            <div>{{ 'terms.tpdsc.asura.affiliation' | translate }}</div>
+          </div>
+        </div>
+        <div>{{ 'terms.tpdsc.support' | translate }}</div>
+      </div>
+    </section>
+
+    <section id="ip">
+      <h2>{{ 'terms.ip.title' | translate }}</h2>
+      <div class="wrapper">
+        <div class="sub-section">
+          <h3>{{ 'terms.ip.offtoon.title' | translate }}</h3>
+          <div class="wrapper">
+            <p>{{ 'terms.ip.offtoon.intro' | translate }}</p>
+            <ul>
+              <li>{{ 'terms.ip.offtoon.source-code' | translate }}</li>
+              <li>{{ 'terms.ip.offtoon.design' | translate }}</li>
+              <li>{{ 'terms.ip.offtoon.structure' | translate }}</li>
+              <li>{{ 'terms.ip.offtoon.branding' | translate }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sub-section">
+          <h3>{{ 'terms.ip.third-party.title' | translate }}</h3>
+          <div class="wrapper">
+            <div>{{ 'terms.ip.third-party.description' | translate }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="license">
+      <h2>{{ 'terms.license.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>{{ 'terms.license.grant' | translate }}</div>
+        <p>{{ 'terms.license.restrictions-intro' | translate }}</p>
+        <ul>
+          <li>{{ 'terms.license.restrictions.exploit' | translate }}</li>
+          <li>{{ 'terms.license.restrictions.extract' | translate }}</li>
+          <li>{{ 'terms.license.restrictions.circumvent' | translate }}</li>
+          <li>{{ 'terms.license.restrictions.claim' | translate }}</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="acceptableuse">
+      <h2>{{ 'terms.acceptable-use.title' | translate }}</h2>
+      <div class="wrapper">
+        <p>{{ 'terms.acceptable-use.intro' | translate }}</p>
+        <ul>
+          <li>{{ 'terms.acceptable-use.restrictions.violate' | translate }}</li>
+          <li>{{ 'terms.acceptable-use.restrictions.interfere' | translate }}</li>
+          <li>{{ 'terms.acceptable-use.restrictions.scraping' | translate }}</li>
+          <li>{{ 'terms.acceptable-use.restrictions.reverse' | translate }}</li>
+          <li>{{ 'terms.acceptable-use.restrictions.compete' | translate }}</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="noprofessionaladvice">
+      <h2>{{ 'terms.no-professional-advice.title' | translate }}</h2>
+      <div class="wrapper">
+        {{ 'terms.no-professional-advice.description' | translate }}
+      </div>
+    </section>
+
+    <section id="externallinks">
+      <h2>{{ 'terms.external-links.title' | translate }}</h2>
+      <div class="wrapper">
+        {{ 'terms.external-links.description' | translate }}
+      </div>
+    </section>
+
+    <section id="disclaimer">
+      <h2>{{ 'terms.disclaimer.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>{{ 'terms.disclaimer.as-is' | translate }}</div>
+        <p>{{ 'terms.disclaimer.liability-intro' | translate }}</p>
+        <ul>
+          <li>{{ 'terms.disclaimer.liability.inaccuracies' | translate }}</li>
+          <li>{{ 'terms.disclaimer.liability.decisions' | translate }}</li>
+          <li>{{ 'terms.disclaimer.liability.interruptions' | translate }}</li>
+          <li>{{ 'terms.disclaimer.liability.damages' | translate }}</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="privacy">
+      <h2>{{ 'terms.privacy.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>{{ 'terms.privacy.description' | translate }}</div>
+        <div>
+          {{ 'terms.privacy.refer' | translate }}
+          <p-button [link]="true" routerLink="/privacy" [label]="'footer.privacy-policy' | translate"/>
+        </div>
+      </div>
+    </section>
+
+    <section id="modifications">
+      <h2>{{ 'terms.modifications.title' | translate }}</h2>
+      <div class="wrapper">
+        {{ 'terms.modifications.description' | translate }}
+      </div>
+    </section>
+
+    <section id="law">
+      <h2>{{ 'terms.law.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>{{ 'terms.law.governing' | translate }}</div>
+        <div>{{ 'terms.law.consumer' | translate }}</div>
+        <div>{{ 'terms.law.disputes' | translate }}</div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>{{ 'terms.contact.title' | translate }}</h2>
+      <div class="wrapper">
+        <div>{{ 'terms.contact.intro' | translate }}</div>
+        <div class="font-medium">
+          <div>{{ 'terms.contact.company' | translate }}</div>
+          <a href="mailto:contact@freits.fr" [innerHTML]="'terms.contact.email' | translate"></a>
+          <div>{{ 'terms.contact.country' | translate }}</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <app-scroll-to-top />
+</app-basic-layout>

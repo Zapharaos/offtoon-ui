@@ -98,5 +98,194 @@
       "retry": "Retry",
       "details": "Show technical details"
     }
+  },
+  "privacy": {
+    "agreement": {
+      "notice": "This Privacy Notice for Offtoon (\"we,\" \"us,\" or \"our\"), describes how and why we might access, collect, store, use, and/or share (\"process\") your personal information when you use our services (\"Services\"), including when you:",
+      "questions": "<span class=\"font-medium\">Questions or concerns?</span> Reading this Privacy Notice will help you understand your privacy rights and choices. We are responsible for making decisions about how your personal information is processed. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at <a href=\"mailto:contact@freits.fr\">contact&#64;freits.fr</a>.",
+      "title": "AGREEMENT TO OUR PRIVACY POLICY",
+      "website": "Visit our website at <a href=\"https://www.offtoon.freits.fr\" target=\"_blank\">https://www.offtoon.freits.fr</a>, or any website of ours that links to this Privacy Notice"
+    },
+    "contact": {
+      "company": "Offtoon",
+      "country": "France",
+      "email": "contact&#64;freits.fr",
+      "intro": "If you have questions or comments about this notice, you may email us at:",
+      "title": "7. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?"
+    },
+    "cookies": {
+      "description": "Offtoon does not use cookies.",
+      "title": "2. DO WE USE COOKIES?"
+    },
+    "external-links": {
+      "description": "Offtoon may contain links to external websites. Offtoon is not responsible for the content or privacy practices of those sites.",
+      "title": "4. EXTERNAL LINKS"
+    },
+    "info-collect": {
+      "automatic": {
+        "intro": "The information we collect includes:",
+        "no-advertising": "No advertising",
+        "no-analytics": "No analytics",
+        "no-profiling": "No profiling",
+        "no-tracking": "No tracking",
+        "title": "Information automatically collected"
+      },
+      "personal": {
+        "no-accounts": "No user accounts",
+        "no-forms": "No contact forms",
+        "none": "We do not collect, store, or process any personal data",
+        "particular": "In particular:",
+        "title": "Personal information you disclose to us"
+      },
+      "title": "1. WHAT INFORMATION DO WE COLLECT?"
+    },
+    "last-updated": "Last updated February 28, 2026",
+    "policy-updates": {
+      "description": "We may update this Privacy Notice from time to time. The updated version will be indicated by an updated \"Revised\" date at the top of this Privacy Notice. We encourage you to review this Privacy Notice frequently to be informed of how we are protecting your information.",
+      "title": "6. DO WE MAKE UPDATES TO THIS NOTICE?"
+    },
+    "third-party": {
+      "disclaimer": "Offtoon does not control how third-party platforms process data. Users are encouraged to consult the respective privacy policies of any platform they visit.",
+      "intro": "Offtoon displays webtoon data aggregated from third-party sources such as Asura Scans. We do not own, host, or claim any rights over this content. All manga, manhwa, and manhua titles, artwork, and related materials belong to their respective authors, artists, and studios.",
+      "support": "We strongly encourage all users to support the original authors, artists, and studios by purchasing official releases and reading on licensed platforms whenever available.",
+      "title": "3. THIRD-PARTY DATA SOURCES"
+    },
+    "title": "PRIVACY POLICY",
+    "toc": {
+      "contact": "7. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?",
+      "cookies": "2. DO WE USE COOKIES?",
+      "external-links": "4. EXTERNAL LINKS",
+      "info-collect": "1. WHAT INFORMATION DO WE COLLECT?",
+      "policy-updates": "6. DO WE MAKE UPDATES TO THIS NOTICE?",
+      "third-party": "3. THIRD-PARTY DATA SOURCES",
+      "title": "TABLE OF CONTENTS",
+      "user-rights": "5. USER RIGHTS"
+    },
+    "user-rights": {
+      "description": "As Offtoon does not collect or process personal data, no personal data requests (access, rectification, deletion) are applicable.",
+      "title": "5. USER RIGHTS"
+    }
+  },
+  "terms": {
+    "acceptable-use": {
+      "intro": "You agree not to:",
+      "restrictions": {
+        "compete": "use the Services or displayed data to compete with Offtoon or the original content providers.",
+        "interfere": "interfere with or disrupt the operation of the Services,",
+        "reverse": "attempt to reverse engineer or copy the underlying software,",
+        "scraping": "perform unauthorized scraping, crawling, or automated access,",
+        "violate": "use the Services in violation of applicable laws or regulations,"
+      },
+      "title": "5. ACCEPTABLE USE"
+    },
+    "agreement": {
+      "binding": "These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity (\"you\"), and Offtoon, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE LEGAL TERMS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICES AND YOU MUST DISCONTINUE USE IMMEDIATELY.",
+      "company": "We are Offtoon (\"Company,\" \"we,\" \"us,\" \"our\").",
+      "contact": "You can contact us by email at <a href=\"mailto:contact@freits.fr\">contact&#64;freits.fr</a>.",
+      "print": "We recommend that you print a copy of these Legal Terms for your records.",
+      "title": "AGREEMENT TO OUR LEGAL TERMS",
+      "website": "We operate the website <a href=\"https://www.offtoon.freits.fr\" target=\"_blank\">https://www.offtoon.freits.fr</a> (the \"Site\"), as well as any other related products and services that refer or link to these legal terms (the \"Legal Terms\") (collectively, the \"Services\")."
+    },
+    "contact": {
+      "company": "Offtoon",
+      "country": "France",
+      "email": "contact&#64;freits.fr",
+      "intro": "In order to resolve a complaint regarding the Services or to receive further information regarding use of the Services, please contact us at:",
+      "title": "12. CONTACT US"
+    },
+    "disclaimer": {
+      "as-is": "The Services are provided \"as is\" and \"as available\", without warranties of any kind.",
+      "liability": {
+        "damages": "any direct or indirect damages resulting from the use or inability to use the Services.",
+        "decisions": "decisions made based on information displayed on the Services,",
+        "inaccuracies": "inaccuracies, errors, or omissions in third-party data,",
+        "interruptions": "service interruptions, delays, or technical failures,"
+      },
+      "liability-intro": "To the fullest extent permitted by applicable law, Offtoon shall not be liable for:",
+      "title": "8. DISCLAIMER & LIMITATION OF LIABILITY"
+    },
+    "external-links": {
+      "description": "The Services may contain links to third-party websites. Offtoon does not control and is not responsible for the content, accuracy, or practices of any external site. Access to third-party websites is at your own risk.",
+      "title": "7. EXTERNAL LINKS"
+    },
+    "ip": {
+      "offtoon": {
+        "branding": "the name \"Offtoon\" and associated branding.",
+        "design": "design, layout, and user interface,",
+        "intro": "Offtoon retains all rights to:",
+        "source-code": "the website's source code,",
+        "structure": "site structure and functionality,",
+        "title": "Offtoon Content"
+      },
+      "third-party": {
+        "description": "Offtoon does not claim ownership over any webtoon titles, manga, manhwa, manhua, artwork, characters, storylines, or any other content originating from third-party sources such as Asura Scans. All such rights remain exclusively with the respective authors, artists, and studios. Offtoon is not affiliated with, endorsed by, or sponsored by any content provider.",
+        "title": "Third-Party Content"
+      },
+      "title": "3. INTELLECTUAL PROPERTY"
+    },
+    "last-updated": "Last updated February 28, 2026",
+    "law": {
+      "consumer": "If you are a consumer residing in the European Union, you may also benefit from mandatory consumer protection provisions applicable in your country of residence.",
+      "disputes": "Any disputes arising in connection with these Terms shall fall under the jurisdiction of the competent French courts.",
+      "governing": "These Terms are governed by the laws of France.",
+      "title": "11. GOVERNING LAW & JURISDICTION"
+    },
+    "license": {
+      "grant": "Subject to these Terms, Offtoon grants you a limited, non-exclusive, non-transferable, and revocable license to access and use the Services for personal, non-commercial purposes only.",
+      "restrictions": {
+        "circumvent": "circumvent technical protections,",
+        "claim": "claim ownership over third-party content accessed via the Services.",
+        "exploit": "reproduce, redistribute, or commercially exploit the Services or their content,",
+        "extract": "extract or reuse data in bulk,"
+      },
+      "restrictions-intro": "You may not:",
+      "title": "4. LICENSE TO THE USE OF SERVICES"
+    },
+    "modifications": {
+      "description": "Offtoon reserves the right to modify, suspend, or discontinue the Services at any time without notice. These Terms may also be updated from time to time. Continued use of the Services after changes are published constitutes acceptance of the revised Terms.",
+      "title": "10. MODIFICATIONS TO THE SERVICES & TERMS"
+    },
+    "no-professional-advice": {
+      "description": "All information provided through the Services is offered as-is and for general informational purposes only. Nothing on Offtoon constitutes legal, financial, commercial, or professional advice.",
+      "title": "6. NO PROFESSIONAL ADVICE"
+    },
+    "privacy": {
+      "description": "Offtoon does not collect personal data, does not provide user accounts, and does not use tracking or advertising cookies. Limited browser local storage may be used solely to store user preferences (such as theme, language, or currency).",
+      "refer": "For more information, please refer to:",
+      "title": "9. PRIVACY"
+    },
+    "services": {
+      "data-source": "Offtoon does not create, own, or control the webtoon content displayed on the Services. All titles, chapters, artwork, and related materials originate from third-party aggregators and publishers such as Asura Scans. All rights remain with the respective authors, artists, and studios.",
+      "description": "Offtoon is a personal, non-commercial website that provides tools to search, browse, and download webtoons (manga, manhwa, and manhua) for personal offline reading.",
+      "purpose": "The Services are provided for informational and personal use purposes only.",
+      "support": "We strongly encourage all users to support the original creators by purchasing official releases, subscribing to licensed platforms, and engaging with the authors and studios through official channels whenever available.",
+      "title": "1. OUR SERVICES"
+    },
+    "title": "TERMS AND CONDITIONS",
+    "toc": {
+      "acceptable-use": "5. ACCEPTABLE USE",
+      "contact": "12. CONTACT US",
+      "disclaimer": "8. DISCLAIMER & LIMITATION OF LIABILITY",
+      "external-links": "7. EXTERNAL LINKS",
+      "ip": "3. INTELLECTUAL PROPERTY",
+      "law": "11. GOVERNING LAW & JURISDICTION",
+      "license": "4. LICENSE TO THE USE OF SERVICES",
+      "modifications": "10. MODIFICATIONS TO THE SERVICES & TERMS",
+      "no-professional-advice": "6. NO PROFESSIONAL ADVICE",
+      "privacy": "9. PRIVACY",
+      "services": "1. OUR SERVICES",
+      "title": "TABLE OF CONTENTS",
+      "tpdsc": "2. THIRD-PARTY DATA SOURCES & COMPLIANCE"
+    },
+    "tpdsc": {
+      "asura": {
+        "affiliation": "Offtoon is not affiliated with, endorsed by, or sponsored by Asura Scans or any other content aggregator. Users remain subject to the applicable terms and policies of any platform they interact with.",
+        "disclaimer": "Offtoon does not host or store any webtoon content. All content is fetched from third-party sources at the time of user request. Offtoon makes no guarantees as to the accuracy, completeness, or availability of any content.",
+        "title": "Asura Scans",
+        "usage": "Asura Scans is a third-party webtoon aggregator. Offtoon retrieves publicly available data from Asura Scans solely to provide search and download functionality to end users for personal, offline use."
+      },
+      "support": "Offtoon believes in supporting the creators behind the content. We encourage all users to read official releases, purchase volumes, and support the authors, artists, and studios whose work they enjoy.",
+      "title": "2. THIRD-PARTY DATA SOURCES & COMPLIANCE"
+    }
   }
 }

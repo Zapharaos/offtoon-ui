@@ -5,7 +5,7 @@
   [closable]="isClosable"
   [draggable]="false"
   [resizable]="false"
-  styleClass="w-full max-w-lg"
+  [styleClass]="dialogWidthClass"
 >
   <ng-template #header>
     <div class="w-full inline-flex items-center justify-between gap-2">
@@ -84,37 +84,132 @@
       </div>
     }
 
-    <!-- Archiving (image fetch + format build starting) -->
-    @if (state === 'archiving') {
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-3 text-sm text-surface-500">
-          <i class="pi pi-spin pi-spinner text-primary-500"></i>
-          <span>{{ 'download.progress.archiving' | translate : { format: (progress?.archivingFormat ?? '' | uppercase) } }}</span>
-        </div>
-        <p-progressbar mode="indeterminate" styleClass="h-2 rounded-full"/>
-      </div>
-    }
+    <!-- Archiving / Images / Zipping — split layout when reports are available -->
+    @if (state === 'archiving' || state === 'images' || state === 'zipping') {
+      <div class="flex flex-col gap-6">
 
-    <!-- Downloading images -->
-    @if (state === 'images') {
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-3 text-sm text-surface-500">
-          <i class="pi pi-spin pi-spinner text-primary-500"></i>
-          <span>{{ 'download.progress.building-archive' | translate }}</span>
-        </div>
-        <div class="flex justify-between text-sm text-surface-400">
-          <span>{{ 'download.progress.images' | translate : { done: progress?.imagesDone, total: progress?.imagesTotal } }}</span>
-          <span>{{ imagesPercent }}%</span>
-        </div>
-        <p-progressbar [value]="imagesPercent" [showValue]="false" styleClass="h-2 rounded-full"/>
-      </div>
-    }
+        <!-- Progress -->
+        <div class="flex flex-col gap-4">
 
-    <!-- Zipping -->
-    @if (state === 'zipping') {
-    <div class="flex flex-col items-center gap-4 py-6">
-        <i class="pi pi-spin pi-spinner text-4xl text-primary-500"></i>
-        <span class="text-sm text-surface-500">{{ 'download.progress.zipping' | translate }}</span>
+          @if (state === 'archiving') {
+            <div class="flex items-center gap-3 text-sm text-surface-500">
+              <i class="pi pi-spin pi-spinner text-primary-500"></i>
+              <span>{{ 'download.progress.archiving' | translate : { format: (progress?.archivingFormat ?? '' | uppercase) } }}</span>
+            </div>
+            <p-progressbar mode="indeterminate" styleClass="h-2 rounded-full"/>
+          }
+
+          @if (state === 'images') {
+            <div class="flex items-center gap-3 text-sm text-surface-500">
+              <i class="pi pi-spin pi-spinner text-primary-500"></i>
+              <span>{{ 'download.progress.building-archive' | translate }}</span>
+            </div>
+            <div class="flex justify-between text-sm text-surface-400">
+              <span>{{ 'download.progress.images' | translate : { done: progress?.imagesDone, total: progress?.imagesTotal } }}</span>
+              <span>{{ imagesPercent }}%</span>
+            </div>
+            <p-progressbar [value]="imagesPercent" [showValue]="false" styleClass="h-2 rounded-full"/>
+          }
+
+          @if (state === 'zipping') {
+            <div class="flex items-center gap-3 text-sm text-surface-500">
+              <i class="pi pi-spin pi-spinner text-primary-500"></i>
+              <span>{{ 'download.progress.zipping' | translate }}</span>
+            </div>
+            <p-progressbar mode="indeterminate" styleClass="h-2 rounded-full"/>
+          }
+
+          <!-- Summary badges -->
+          <!--@if (hasReports) {
+            <div class="flex flex-col gap-1 pt-1">
+              @if (reportSummary.failed > 0) {
+                <div class="flex items-center gap-2 text-xs text-red-400">
+                  <i class="pi pi-times-circle"></i>
+                  <span>{{ reportSummary.failed }} failed</span>
+                </div>
+              }
+              @if (reportSummary.incomplete > 0) {
+                <div class="flex items-center gap-2 text-xs text-yellow-400">
+                  <i class="pi pi-exclamation-triangle"></i>
+                  <span>{{ reportSummary.incomplete }} incomplete</span>
+                </div>
+              }
+              @if (reportSummary.success > 0) {
+                <div class="flex items-center gap-2 text-xs text-green-400">
+                  <i class="pi pi-check-circle"></i>
+                  <span>{{ reportSummary.success }} succeeded</span>
+                </div>
+              }
+            </div>
+          }-->
+        </div>
+
+        <!-- Chapter report list -->
+        @if (hasReports) {
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-xs font-medium text-surface-400 uppercase tracking-wider">
+                {{ 'download.report.chapters-label' | translate }} ({{ chapterReports.length }})
+              </p>
+              <p-button
+                [label]="showReports ? ('download.report.collapse' | translate) : ('download.report.expand' | translate)"
+                [icon]="showReports ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                iconPos="right"
+                size="small"
+                severity="secondary"
+                variant="text"
+                (onClick)="toggleReports()"
+                styleClass="text-xs py-0 px-1 h-auto"
+              />
+            </div>
+            @if (showReports) {
+              <div class="flex flex-col gap-1 max-h-56 overflow-y-auto pr-1">
+                @for (report of sortedChapterReports; track report.chapter_id) {
+                  @if (report.status === 'success') {
+                    <!-- Success: simple row, no expansion needed -->
+                    <div class="flex items-center gap-2 rounded-md px-2 py-1.5 bg-surface-800/40 text-sm">
+                      <i class="pi pi-check-circle text-green-400 shrink-0 text-xs"></i>
+                      <span class="truncate text-surface-300 text-xs flex-1">{{ report.chapter }}</span>
+                      <p-tag severity="success" value="OK" styleClass="text-xs px-1 py-0"/>
+                    </div>
+                  } @else {
+                    <!-- Incomplete / Failed: accordion to show image-level errors -->
+                    <p-accordion>
+                      <p-accordion-panel [value]="report.chapter_id">
+                        <p-accordion-header>
+                          <div class="flex items-center gap-2 w-full min-w-0">
+                            <i class="shrink-0 text-xs" [class]="reportIconClass(report.status)"></i>
+                            <span class="truncate text-xs flex-1">{{ report.chapter }}</span>
+                            <p-tag
+                              [severity]="reportSeverity(report.status)"
+                              [value]="report.status === 'incomplete' ? 'partial' : 'failed'"
+                              styleClass="text-xs px-1 py-0 shrink-0"
+                            />
+                          </div>
+                        </p-accordion-header>
+                        <p-accordion-content>
+                          <div class="flex flex-col gap-1 pt-1">
+                            @if (report.reason) {
+                              <p class="text-xs text-surface-400 mb-1">{{ report.reason }}</p>
+                            }
+                            @for (img of report.images; track img.page) {
+                              @if (img.status === 'failed') {
+                                <div class="flex items-start gap-2 text-xs text-surface-400">
+                                  <span class="shrink-0 text-red-400">p.{{ img.page }}</span>
+                                  <span class="truncate" [pTooltip]="img.reason ?? ''" tooltipPosition="top">{{ img.reason ?? 'failed' }}</span>
+                                </div>
+                              }
+                            }
+                          </div>
+                        </p-accordion-content>
+                      </p-accordion-panel>
+                    </p-accordion>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
       </div>
     }
 
@@ -129,10 +224,71 @@
 
     <!-- Completed -->
     @if (state === 'completed') {
-      <div class="flex flex-col items-center gap-4 py-6">
-        <i class="pi pi-check-circle text-4xl text-green-500"></i>
-        <p class="font-medium">{{ 'download.completed.title' | translate }}</p>
-        <p class="text-sm text-surface-400 text-center">{{ 'download.completed.hint' | translate }}</p>
+      <div class="flex flex-col gap-6">
+        <div class="flex flex-col items-center gap-3 py-4">
+          <i class="pi pi-check-circle text-4xl text-green-500"></i>
+          <p class="font-medium">{{ 'download.completed.title' | translate }}</p>
+          <p class="text-sm text-surface-400 text-center">{{ 'download.completed.hint' | translate }}</p>
+        </div>
+
+        <!-- Chapter report summary on completion -->
+        @if (hasReports && (reportSummary.incomplete > 0 || reportSummary.failed > 0)) {
+          <div class="border-t border-surface-700 pt-4">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-xs font-medium text-surface-400 uppercase tracking-wider">
+                {{ 'download.report.chapters-label' | translate }} — {{ 'download.report.issues-only' | translate }}
+              </p>
+              <p-button
+                [label]="showReports ? ('download.report.collapse' | translate) : ('download.report.expand' | translate)"
+                [icon]="showReports ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                iconPos="right"
+                size="small"
+                severity="secondary"
+                variant="text"
+                (onClick)="toggleReports()"
+                styleClass="text-xs py-0 px-1 h-auto"
+              />
+            </div>
+            @if (showReports) {
+              <div class="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1">
+                @for (report of sortedChapterReports; track report.chapter_id) {
+                  @if (report.status !== 'success') {
+                    <p-accordion>
+                      <p-accordion-panel [value]="report.chapter_id">
+                        <p-accordion-header>
+                          <div class="flex items-center gap-2 w-full min-w-0">
+                            <i class="shrink-0 text-xs" [class]="reportIconClass(report.status)"></i>
+                            <span class="truncate text-xs flex-1">{{ report.chapter }}</span>
+                            <p-tag
+                              [severity]="reportSeverity(report.status)"
+                              [value]="report.status === 'incomplete' ? 'partial' : 'failed'"
+                              styleClass="text-xs px-1 py-0 shrink-0"
+                            />
+                          </div>
+                        </p-accordion-header>
+                        <p-accordion-content>
+                          <div class="flex flex-col gap-1 pt-1">
+                            @if (report.reason) {
+                              <p class="text-xs text-surface-400 mb-1">{{ report.reason }}</p>
+                            }
+                            @for (img of report.images; track img.page) {
+                              @if (img.status === 'failed') {
+                                <div class="flex items-start gap-2 text-xs text-surface-400">
+                                  <span class="shrink-0 text-red-400">p.{{ img.page }}</span>
+                                  <span class="truncate" [pTooltip]="img.reason ?? ''" tooltipPosition="top">{{ img.reason ?? 'failed' }}</span>
+                                </div>
+                              }
+                            }
+                          </div>
+                        </p-accordion-content>
+                      </p-accordion-panel>
+                    </p-accordion>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
       </div>
     }
   }

@@ -4,7 +4,7 @@ import {ToonService} from '@core/api/api/toon.service';
 import {ApiSource} from '@core/api/model/apiSource';
 import {ToonChapter} from '@core/api/model/toonChapter';
 import {NotificationUtilsService} from '@shared/services/notification-utils.service';
-import {DownloadFormat, DownloadProgress, DownloadService} from '@shared/services/download.service';
+import {DownloadFormat, DownloadProgress, DownloadService, WsPacketChapterReport} from '@shared/services/download.service';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {SelectButtonModule} from 'primeng/selectbutton';
@@ -12,6 +12,9 @@ import {ProgressBarModule} from 'primeng/progressbar';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
 import {UpperCasePipe} from '@angular/common';
+import {AccordionModule} from 'primeng/accordion';
+import {TagModule} from 'primeng/tag';
+import {TooltipModule} from 'primeng/tooltip';
 
 interface FormatOption {
   label: string;
@@ -29,6 +32,9 @@ interface FormatOption {
     TranslateModule,
     FormsModule,
     UpperCasePipe,
+    AccordionModule,
+    TagModule,
+    TooltipModule,
   ],
   templateUrl: './download-dialog.component.html',
   styleUrl: './download-dialog.component.scss',
@@ -59,6 +65,7 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
 
   get state() {
     return this.progress?.state ?? 'idle';
+    // return 'downloading';
   }
 
   get chaptersPercent(): number {
@@ -80,6 +87,55 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
     return s !== 'pending' && s !== 'connecting' && s !== 'chapters' && s !== 'archiving' && s !== 'images' && s !== 'zipping' && s !== 'downloading';
   }
 
+  get chapterReports(): WsPacketChapterReport[] {
+    return this.progress?.chapterReports ?? [];
+  }
+
+  private readonly statusOrder: Record<string, number> = { failed: 0, incomplete: 1, success: 2 };
+
+  get sortedChapterReports(): WsPacketChapterReport[] {
+    return [...this.chapterReports].sort((a, b) => {
+      const byStatus = (this.statusOrder[a.status] ?? 3) - (this.statusOrder[b.status] ?? 3);
+      if (byStatus !== 0) return byStatus;
+      return (a.chapter ?? '').localeCompare(b.chapter ?? '');
+    });
+  }
+
+  showReports = false;
+
+  toggleReports(): void {
+    this.showReports = !this.showReports;
+  }
+
+  get hasReports(): boolean {
+    return this.chapterReports.length > 0;
+    // return true
+  }
+
+  get reportSummary(): { success: number; incomplete: number; failed: number } {
+    const reports = this.chapterReports;
+    return {
+      success: reports.filter(r => r.status === 'success').length,
+      incomplete: reports.filter(r => r.status === 'incomplete').length,
+      failed: reports.filter(r => r.status === 'failed').length,
+    };
+  }
+
+  get dialogWidthClass(): string {
+    return this.hasReports ? 'w-full max-w-2xl' : 'w-full max-w-lg';
+  }
+
+  reportSeverity(status: 'success' | 'incomplete' | 'failed'): 'success' | 'warn' | 'danger' {
+    if (status === 'success') return 'success';
+    if (status === 'incomplete') return 'warn';
+    return 'danger';
+  }
+
+  reportIconClass(status: 'success' | 'incomplete' | 'failed'): string {
+    if (status === 'incomplete') return 'pi pi-exclamation-triangle text-yellow-400';
+    return 'pi pi-times-circle text-red-400';
+  }
+
   /**
    * Returns "X / 3" for the three trackable steps, null for connecting/downloading/completed.
    * Shown as a small ambient label — not interactive.
@@ -97,6 +153,8 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.downloadService.progress.subscribe(p => {
       this.progress = p;
+      // Auto-collapse report list whenever a new session starts
+      if (p.state === 'idle') this.showReports = false;
     });
     this.downloadService.reset();
   }

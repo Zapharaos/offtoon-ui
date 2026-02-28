@@ -68,13 +68,30 @@ export interface WsPacketZipping {
   format: string;
 }
 
+export interface ChapterImageReport {
+  page: number;
+  url: string;
+  status: 'success' | 'failed';
+  reason?: string;
+}
+
+export interface WsPacketChapterReport {
+  type: 'chapter_report';
+  chapter_id: string;
+  chapter: string;
+  status: 'success' | 'incomplete' | 'failed';
+  reason?: string;
+  images?: ChapterImageReport[];
+}
+
 export type WsPacket =
   | WsPacketInit
   | WsPacketProgress
   | WsPacketCompleted
   | WsPacketFatal
   | WsPacketArchiving
-  | WsPacketZipping;
+  | WsPacketZipping
+  | WsPacketChapterReport;
 
 // ── Progress model ────────────────────────────────────────────────────────────
 
@@ -91,6 +108,8 @@ export interface DownloadProgress {
   /** Archiving phase info */
   archivingChapters: number | null;
   archivingFormat: string | null;
+  /** Chapter reports received during archiving phase */
+  chapterReports: WsPacketChapterReport[];
   /** Fatal error info */
   fatalStep: number | null;
   fatalMessage: string | null;
@@ -128,6 +147,7 @@ export class DownloadService implements OnDestroy {
       scrapedChapters: [],
       archivingChapters: null,
       archivingFormat: null,
+      chapterReports: [],
       fatalStep: null,
       fatalMessage: null,
       errorMessage: null,
@@ -235,6 +255,7 @@ export class DownloadService implements OnDestroy {
           imagesTotal: 0,
           archivingChapters: null,
           archivingFormat: null,
+          chapterReports: [],
           fatalStep: null,
           fatalMessage: null,
           errorMessage: null,
@@ -316,6 +337,15 @@ export class DownloadService implements OnDestroy {
           state: 'archiving',
           archivingChapters: packet.chapters,
           archivingFormat: packet.format,
+        };
+        this.emit();
+        break;
+
+      case 'chapter_report':
+        console.log(`[DownloadService] ← chapter_report | chapter="${packet.chapter}" status=${packet.status}`);
+        this.currentProgress = {
+          ...this.currentProgress,
+          chapterReports: [...this.currentProgress.chapterReports, packet],
         };
         this.emit();
         break;

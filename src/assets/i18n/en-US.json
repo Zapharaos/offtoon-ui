@@ -88,6 +88,12 @@
       "hint": "The file should have started downloading automatically.",
       "close": "Close"
     },
+    "report": {
+      "chapters-label": "Chapter reports",
+      "issues-only": "issues only",
+      "expand": "Show",
+      "collapse": "Hide"
+    },
     "error": {
       "title": "Download failed",
       "retry": "Retry",

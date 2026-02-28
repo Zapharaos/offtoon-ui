@@ -112,11 +112,10 @@
           }
 
           @if (state === 'zipping') {
-            <div class="flex items-center gap-3 text-sm text-surface-500">
-              <i class="pi pi-spin pi-spinner text-primary-500"></i>
-              <span>{{ 'download.progress.zipping' | translate }}</span>
+            <div class="flex flex-col items-center gap-4 py-6">
+              <i class="pi pi-spin pi-spinner text-4xl text-primary-500"></i>
+              <p class="text-sm text-surface-500">{{ 'download.progress.zipping' | translate }}</p>
             </div>
-            <p-progressbar mode="indeterminate" styleClass="h-2 rounded-full"/>
           }
 
           <!-- Summary badges -->
@@ -175,7 +174,7 @@
                   } @else {
                     <!-- Incomplete / Failed: accordion to show image-level errors -->
                     <p-accordion>
-                      <p-accordion-panel [value]="report.chapter_id">
+                      <p-accordion-panel [value]="report.chapter_id ?? ''">
                         <p-accordion-header>
                           <div class="flex items-center gap-2 w-full min-w-0">
                             <i class="shrink-0 text-xs" [class]="reportIconClass(report.status)"></i>
@@ -218,7 +217,6 @@
       <div class="flex flex-col items-center gap-4 py-6">
         <i class="pi pi-spin pi-spinner text-4xl text-primary-500"></i>
         <p class="text-sm text-surface-500">{{ 'download.downloading-archive' | translate }}</p>
-        <p-progressbar mode="indeterminate" styleClass="h-2 w-full rounded-full"/>
       </div>
     }
 
@@ -254,7 +252,7 @@
                 @for (report of sortedChapterReports; track report.chapter_id) {
                   @if (report.status !== 'success') {
                     <p-accordion>
-                      <p-accordion-panel [value]="report.chapter_id">
+                      <p-accordion-panel [value]="report.chapter_id ?? ''">
                         <p-accordion-header>
                           <div class="flex items-center gap-2 w-full min-w-0">
                             <i class="shrink-0 text-xs" [class]="reportIconClass(report.status)"></i>

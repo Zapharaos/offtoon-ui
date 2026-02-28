@@ -1,6 +1,18 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {environment} from '@environments/environment';
+import {ToonruntimePacketChapterReport} from '@core/api/model/toonruntimePacketChapterReport';
+import {ToonruntimePacketCompleted} from '@core/api/model/toonruntimePacketCompleted';
+import {ToonruntimePacketProgress} from '@core/api/model/toonruntimePacketProgress';
+import {ToonruntimePacketInit} from '@core/api/model/toonruntimePacketInit';
+import {ToonruntimePacketFatal} from '@core/api/model/toonruntimePacketFatal';
+import {ToonruntimePacketArchiving} from '@core/api/model/toonruntimePacketArchiving';
+import {ToonruntimePacketZipping} from '@core/api/model/toonruntimePacketZipping';
+import {ToonChapter} from '@core/api/model/toonChapter';
+
+export type {ToonruntimePacketChapterReport};
+export type {ArchiverImageReport} from '@core/api/model/archiverImageReport';
+export type {ToonChapter};
 
 export type DownloadFormat = 'pdf' | 'cbz' | 'images';
 
@@ -18,71 +30,17 @@ export type DownloadState =
 
 // ── Packet types ──────────────────────────────────────────────────────────────
 
-export interface WsChapterItem {
-  id: string;
-  title: string;
-  number: number;
-  url: string;
-  pages: Array<{ number: number; image_url: string }>;
-}
+// Each generated model type has `type?: ToonruntimePacketType` (optional), so the
+// switch discriminant would not narrow correctly. We intersect each with a required
+// literal `type` field so TypeScript can narrow the union inside handlePacket().
 
-export interface WsPacketInit {
-  type: 'init';
-  hash: string;
-}
-
-export interface WsPacketProgress {
-  type: 'progress';
-  hash: string;
-  phase: 'chapters' | 'images';
-  total: number;
-  done: number;
-  items: WsChapterItem[];
-}
-
-export interface WsPacketCompleted {
-  type: 'completed';
-  hash: string;
-  total: number;
-  archive_url: string;
-}
-
-export interface WsPacketFatal {
-  type: 'fatal';
-  hash: string;
-  step: 1 | 2 | 3 | 4 | 5;
-  message: string;
-}
-
-export interface WsPacketArchiving {
-  type: 'archiving';
-  hash: string;
-  chapters: number;
-  format: string;
-}
-
-export interface WsPacketZipping {
-  type: 'zipping';
-  hash: string;
-  chapters: number;
-  format: string;
-}
-
-export interface ChapterImageReport {
-  page: number;
-  url: string;
-  status: 'success' | 'failed';
-  reason?: string;
-}
-
-export interface WsPacketChapterReport {
-  type: 'chapter_report';
-  chapter_id: string;
-  chapter: string;
-  status: 'success' | 'incomplete' | 'failed';
-  reason?: string;
-  images?: ChapterImageReport[];
-}
+export type WsPacketInit        = ToonruntimePacketInit        & { type: 'init' };
+export type WsPacketProgress    = ToonruntimePacketProgress    & { type: 'progress'; phase: 'chapters' | 'images'; done: number; total: number; items: ToonChapter[] };
+export type WsPacketCompleted   = ToonruntimePacketCompleted   & { type: 'completed'; archive_url: string };
+export type WsPacketFatal       = ToonruntimePacketFatal       & { type: 'fatal' };
+export type WsPacketArchiving   = ToonruntimePacketArchiving   & { type: 'archiving' };
+export type WsPacketZipping     = ToonruntimePacketZipping     & { type: 'zipping' };
+export type WsPacketChapterReport = ToonruntimePacketChapterReport & { type: 'chapter_report' };
 
 export type WsPacket =
   | WsPacketInit
@@ -104,7 +62,7 @@ export interface DownloadProgress {
   imagesDone: number;
   imagesTotal: number;
   /** Accumulated chapter metadata received so far */
-  scrapedChapters: WsChapterItem[];
+  scrapedChapters: ToonChapter[];
   /** Archiving phase info */
   archivingChapters: number | null;
   archivingFormat: string | null;
@@ -299,8 +257,8 @@ export class DownloadService implements OnDestroy {
             this.currentProgress = {
               ...this.currentProgress,
               state: 'zipping',
-              archivingChapters: z.chapters,
-              archivingFormat: z.format,
+              archivingChapters: z.chapters ?? null,
+              archivingFormat: z.format ?? null,
             };
           }
         }
@@ -323,20 +281,20 @@ export class DownloadService implements OnDestroy {
         this.currentProgress = {
           ...this.currentProgress,
           state: 'error',
-          fatalStep: packet.step,
-          fatalMessage: packet.message,
-          errorMessage: this.fatalStepToMessage(packet.step),
+          fatalStep: packet.step ?? null,
+          fatalMessage: packet.message ?? null,
+          errorMessage: this.fatalStepToMessage(packet.step ?? 0),
         };
         this.emit();
         break;
 
       case 'archiving':
-        console.log(`[DownloadService] ← archiving | chapters=${packet.chapters} format=${packet.format} — image fetch + ${packet.format.toUpperCase()} build starting`);
+        console.log(`[DownloadService] ← archiving | chapters=${packet.chapters} format=${packet.format} — image fetch + ${(packet.format ?? '').toUpperCase()} build starting`);
         this.currentProgress = {
           ...this.currentProgress,
           state: 'archiving',
-          archivingChapters: packet.chapters,
-          archivingFormat: packet.format,
+          archivingChapters: packet.chapters ?? null,
+          archivingFormat: packet.format ?? null,
         };
         this.emit();
         break;
@@ -358,8 +316,8 @@ export class DownloadService implements OnDestroy {
           this.currentProgress = {
             ...this.currentProgress,
             state: 'zipping',
-            archivingChapters: packet.chapters,
-            archivingFormat: packet.format,
+            archivingChapters: packet.chapters ?? null,
+            archivingFormat: packet.format ?? null,
           };
           this.emit();
         } else {

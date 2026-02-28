@@ -5,6 +5,7 @@ import {ApiSource} from '@core/api/model/apiSource';
 import {ToonChapter} from '@core/api/model/toonChapter';
 import {NotificationUtilsService} from '@shared/services/notification-utils.service';
 import {DownloadFormat, DownloadProgress, DownloadService, WsPacketChapterReport} from '@shared/services/download.service';
+import {ArchiverChapterStatus} from '@core/api/model/archiverChapterStatus';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {SelectButtonModule} from 'primeng/selectbutton';
@@ -65,7 +66,6 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
 
   get state() {
     return this.progress?.state ?? 'idle';
-    // return 'downloading';
   }
 
   get chaptersPercent(): number {
@@ -91,11 +91,15 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
     return this.progress?.chapterReports ?? [];
   }
 
-  private readonly statusOrder: Record<string, number> = { failed: 0, incomplete: 1, success: 2 };
+  private readonly statusOrder: Record<string, number> = {
+    [ArchiverChapterStatus.ChapterStatusFailed]: 0,
+    [ArchiverChapterStatus.ChapterStatusIncomplete]: 1,
+    [ArchiverChapterStatus.ChapterStatusSuccess]: 2,
+  };
 
   get sortedChapterReports(): WsPacketChapterReport[] {
     return [...this.chapterReports].sort((a, b) => {
-      const byStatus = (this.statusOrder[a.status] ?? 3) - (this.statusOrder[b.status] ?? 3);
+      const byStatus = (this.statusOrder[a.status ?? ''] ?? 3) - (this.statusOrder[b.status ?? ''] ?? 3);
       if (byStatus !== 0) return byStatus;
       return (a.chapter ?? '').localeCompare(b.chapter ?? '');
     });
@@ -109,15 +113,14 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
 
   get hasReports(): boolean {
     return this.chapterReports.length > 0;
-    // return true
   }
 
   get reportSummary(): { success: number; incomplete: number; failed: number } {
     const reports = this.chapterReports;
     return {
-      success: reports.filter(r => r.status === 'success').length,
-      incomplete: reports.filter(r => r.status === 'incomplete').length,
-      failed: reports.filter(r => r.status === 'failed').length,
+      success: reports.filter(r => r.status === ArchiverChapterStatus.ChapterStatusSuccess).length,
+      incomplete: reports.filter(r => r.status === ArchiverChapterStatus.ChapterStatusIncomplete).length,
+      failed: reports.filter(r => r.status === ArchiverChapterStatus.ChapterStatusFailed).length,
     };
   }
 
@@ -125,14 +128,14 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
     return this.hasReports ? 'w-full max-w-2xl' : 'w-full max-w-lg';
   }
 
-  reportSeverity(status: 'success' | 'incomplete' | 'failed'): 'success' | 'warn' | 'danger' {
-    if (status === 'success') return 'success';
-    if (status === 'incomplete') return 'warn';
+  reportSeverity(status: ArchiverChapterStatus | undefined): 'success' | 'warn' | 'danger' {
+    if (status === ArchiverChapterStatus.ChapterStatusSuccess) return 'success';
+    if (status === ArchiverChapterStatus.ChapterStatusIncomplete) return 'warn';
     return 'danger';
   }
 
-  reportIconClass(status: 'success' | 'incomplete' | 'failed'): string {
-    if (status === 'incomplete') return 'pi pi-exclamation-triangle text-yellow-400';
+  reportIconClass(status: ArchiverChapterStatus | undefined): string {
+    if (status === ArchiverChapterStatus.ChapterStatusIncomplete) return 'pi pi-exclamation-triangle text-yellow-400';
     return 'pi pi-times-circle text-red-400';
   }
 

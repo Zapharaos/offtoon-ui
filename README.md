@@ -1,4 +1,4 @@
-# Offtoon UI
+# Offtoon
 
 **Offtoon** is a modern web application for searching, browsing, and downloading webtoons and manga chapters from various online sources. It provides a streamlined interface to search for toons, explore chapter lists, and download content in multiple formats (PDF, CBZ, or raw images) with real-time progress tracking via WebSocket.
 
@@ -33,7 +33,7 @@ Built with modern web technologies:
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone git@github.com:Zapharaos/offtoon-ui.git
 cd offtoon-ui
 ```
 

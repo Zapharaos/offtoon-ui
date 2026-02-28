@@ -127,7 +127,7 @@
             {{ 'toon.selected-count' | translate : { count: selectedChapters.length } }}
           </span>
           }
-          <p-button [label]="'toon.table.download' | translate" [disabled]="selectedChapters.length <= 0"/>
+          <p-button [label]="'toon.table.download' | translate" icon="pi pi-download" [disabled]="selectedChapters.length <= 0" (onClick)="openDownloadDialog()"/>
         </div>
       </div>
 
@@ -223,4 +223,15 @@
     }
 
   </div>
+
+  <!-- ─── Download Dialog ─── -->
+  @if (toon) {
+    <app-download-dialog
+      [(visible)]="showDownloadDialog"
+      [source]="routeSource"
+      [slug]="routeSlug"
+      [chapters]="selectedChapters"
+    />
+  }
+
 </app-basic-layout>

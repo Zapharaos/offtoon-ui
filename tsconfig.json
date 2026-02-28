@@ -13,6 +13,9 @@
       ],
       "@shared/*": [
         "app/shared/*"
+      ],
+      "@environments/*": [
+        "environments/*"
       ]
     },
     "outDir": "./dist/out-tsc",

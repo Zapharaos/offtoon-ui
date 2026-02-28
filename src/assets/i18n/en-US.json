@@ -60,5 +60,38 @@
       "empty": "No chapters available.",
       "download": "Download"
     }
+  },
+  "download": {
+    "title": "Download chapters",
+    "chapters-selected": "{{count}} chapter(s) selected",
+    "start": "Start download",
+    "cancel": "Cancel",
+    "pending": "Connecting, please wait…",
+    "downloading-archive": "Preparing your file…",
+    "step-label": "Step {{label}}",
+    "format": {
+      "label": "Output format",
+      "pdf-desc": "Best for phones and universal readers.",
+      "cbz-desc": "For comic reader apps (Panels, Chunky, etc.).",
+      "images-desc": "Loose WebP files in folders inside the ZIP."
+    },
+    "progress": {
+      "fetching-chapters": "Fetching chapter list…",
+      "chapters": "{{done}} / {{total}} chapters",
+      "archiving": "Building {{format}} archive…",
+      "zipping": "Writing ZIP… (this may take a few minutes)",
+      "building-archive": "Building archive…",
+      "images": "{{done}} / {{total}} images"
+    },
+    "completed": {
+      "title": "Your download is ready!",
+      "hint": "The file should have started downloading automatically.",
+      "close": "Close"
+    },
+    "error": {
+      "title": "Download failed",
+      "retry": "Retry",
+      "details": "Show technical details"
+    }
   }
 }

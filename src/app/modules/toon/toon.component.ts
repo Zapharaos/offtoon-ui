@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {finalize} from 'rxjs';
 import {BasicLayoutComponent} from '@shared/layouts/basic-layout/basic-layout.component';
 import {ScrollToTopComponent} from '@shared/components/scroll-to-top/scroll-to-top.component';
+import {DownloadDialogComponent} from '@shared/components/download-dialog/download-dialog.component';
 import {ToonService} from '@core/api/api/toon.service';
 import {ToonToon} from '@core/api/model/toonToon';
 import {ToonChapter} from '@core/api/model/toonChapter';
@@ -22,6 +23,7 @@ import {DatePipe} from '@angular/common';
   imports: [
     BasicLayoutComponent,
     ScrollToTopComponent,
+    DownloadDialogComponent,
     SkeletonModule,
     TableModule,
     ButtonModule,
@@ -37,6 +39,10 @@ export class ToonComponent implements OnInit {
   loading = true;
   toon: ToonToon | null = null;
   selectedChapters: ToonChapter[] = [];
+  showDownloadDialog = false;
+
+  routeSource: ApiSource = '' as ApiSource;
+  routeSlug = '';
 
   private backQuery: string | null = null;
   private backSources: string[] = [];
@@ -51,6 +57,9 @@ export class ToonComponent implements OnInit {
   ngOnInit(): void {
     const source = this.route.snapshot.paramMap.get('source') as ApiSource;
     const slug = this.route.snapshot.paramMap.get('slug') ?? '';
+
+    this.routeSource = source;
+    this.routeSlug = slug;
 
     const state = history.state;
     this.backQuery = state?.back_q ?? null;
@@ -102,6 +111,10 @@ export class ToonComponent implements OnInit {
       case ToonStatus.StatusUnknown:    return 'Unknown';
       default:                          return status ?? '';
     }
+  }
+
+  openDownloadDialog(): void {
+    this.showDownloadDialog = true;
   }
 
   goBack(): void {

@@ -66,7 +66,7 @@
     "start": "Start download",
     "cancel": "Cancel",
     "pending": "Connecting, please wait…",
-    "downloading-archive": "Preparing your file…",
+    "downloading-archive": "Preparing your file… (this may take a few minutes)",
     "step-label": "Step {{label}}",
     "format": {
       "label": "Output format",

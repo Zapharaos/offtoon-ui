@@ -10,8 +10,6 @@ Offtoon helps users:
 - **Search** for webtoons and manga across multiple sources (e.g., Asura)
 - **Browse** detailed toon pages including cover art, author, artist, status, and chapter lists
 - **Download** selected chapters in PDF, CBZ, or image formats
-- **Track** download progress in real time with per-chapter and per-image reporting
-- **Sort & filter** search results by name, source, status, or chapter count
 
 ## 🛠️ Technologies
 

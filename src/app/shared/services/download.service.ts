@@ -20,11 +20,9 @@ export type DownloadState =
   | 'idle'
   | 'pending'
   | 'connecting'
-  | 'chapters'
-  | 'archiving'
-  | 'images'
-  | 'zipping'
-  | 'downloading'
+  | 'downloading' // unified pipelined phase: page-list resolution + image download, tracked by chapters
+  | 'zipping'     // writing the final outer ZIP
+  | 'saving'      // fetching the assembled archive blob to the browser
   | 'completed'
   | 'error';
 
@@ -35,7 +33,9 @@ export type DownloadState =
 // literal `type` field so TypeScript can narrow the union inside handlePacket().
 
 export type WsPacketInit        = ToonruntimePacketInit        & { type: 'init' };
-export type WsPacketProgress    = ToonruntimePacketProgress    & { type: 'progress'; phase: 'chapters' | 'images'; done: number; total: number; items: ToonChapter[] };
+export type DownloadPhase = 'downloading' | 'building';
+
+export type WsPacketProgress    = ToonruntimePacketProgress    & { type: 'progress'; phase: DownloadPhase; done: number; total: number; items: ToonChapter[] };
 export type WsPacketCompleted   = ToonruntimePacketCompleted   & { type: 'completed'; archive_url: string };
 export type WsPacketFatal       = ToonruntimePacketFatal       & { type: 'fatal' };
 export type WsPacketArchiving   = ToonruntimePacketArchiving   & { type: 'archiving' };
@@ -55,18 +55,15 @@ export type WsPacket =
 
 export interface DownloadProgress {
   state: DownloadState;
-  /** Chapter scraping phase counters */
-  chaptersDone: number;
-  chaptersTotal: number;
-  /** Image download phase counters */
-  imagesDone: number;
-  imagesTotal: number;
-  /** Accumulated chapter metadata received so far */
-  scrapedChapters: ToonChapter[];
-  /** Archiving phase info */
+  /** Which page-level phase the progress counters refer to */
+  phase: DownloadPhase;
+  /** Page-level progress within the current phase: pages processed / total pages */
+  done: number;
+  total: number;
+  /** Zipping phase info (format is shown while zipping) */
   archivingChapters: number | null;
   archivingFormat: string | null;
-  /** Chapter reports received during archiving phase */
+  /** Per-chapter build reports, streamed as each chapter finishes */
   chapterReports: WsPacketChapterReport[];
   /** Fatal error info */
   fatalStep: number | null;
@@ -88,21 +85,12 @@ export class DownloadService implements OnDestroy {
 
   private slug = '';
 
-  /**
-   * The backend can send `zipping` before the last `progress/images` packets
-   * have arrived (they are sent concurrently). Buffer it here and apply it only
-   * once images are fully done (done === total).
-   */
-  private pendingZipping: WsPacketZipping | null = null;
-
   private defaultProgress(): DownloadProgress {
     return {
       state: 'idle',
-      chaptersDone: 0,
-      chaptersTotal: 0,
-      imagesDone: 0,
-      imagesTotal: 0,
-      scrapedChapters: [],
+      phase: 'downloading',
+      done: 0,
+      total: 0,
       archivingChapters: null,
       archivingFormat: null,
       chapterReports: [],
@@ -116,7 +104,6 @@ export class DownloadService implements OnDestroy {
     console.log(`[DownloadService] reset()`);
     this.clearRetry();
     this.closeWs();
-    this.pendingZipping = null;
     this.currentProgress = this.defaultProgress();
     this.progress$.next({...this.currentProgress});
   }
@@ -125,7 +112,6 @@ export class DownloadService implements OnDestroy {
     console.log(`[DownloadService] connectAndTrack() — runtimeId=${runtimeId}`);
     this.slug = slug;
     this.closeWs();
-    this.pendingZipping = null;
 
     this.currentProgress = {
       ...this.defaultProgress(),
@@ -200,17 +186,14 @@ export class DownloadService implements OnDestroy {
     switch (packet.type) {
       case 'init':
         console.log(`[DownloadService] ← init | WS handshake accepted — transitioning to "connecting"`);
-        this.pendingZipping = null;
         this.currentProgress = {
           ...this.currentProgress,
           state: 'connecting',
           // Guarantee a clean slate for every new session in case connectAndTrack
           // was not called (e.g. reuse after partial reset) or a race left stale data.
-          scrapedChapters: [],
-          chaptersDone: 0,
-          chaptersTotal: 0,
-          imagesDone: 0,
-          imagesTotal: 0,
+          phase: 'downloading',
+          done: 0,
+          total: 0,
           archivingChapters: null,
           archivingFormat: null,
           chapterReports: [],
@@ -221,55 +204,34 @@ export class DownloadService implements OnDestroy {
         this.emit();
         break;
 
-      case 'progress':
-        if (packet.phase === 'chapters') {
-          const accumulated = [...this.currentProgress.scrapedChapters, ...packet.items];
-          console.log(
-            `[DownloadService] ← progress/chapters | done=${packet.done}/${packet.total}` +
-            ` batch=${packet.items.length} total_scraped=${accumulated.length}`
-          );
-          this.currentProgress = {
-            ...this.currentProgress,
-            state: 'chapters',
-            chaptersDone: packet.done,
-            chaptersTotal: packet.total,
-            scrapedChapters: accumulated,
-          };
-        } else {
-          const pct = Math.round((packet.done / packet.total) * 100);
-          const allImagesDone = packet.done >= packet.total;
-          console.log(
-            `[DownloadService] ← progress/images | done=${packet.done}/${packet.total} (${pct}%)` +
-            (this.pendingZipping && !allImagesDone ? ' [zipping buffered]' : '') +
-            (allImagesDone && this.pendingZipping ? ' → flushing buffered zipping' : '')
-          );
-          this.currentProgress = {
-            ...this.currentProgress,
-            state: 'images',
-            imagesDone: packet.done,
-            imagesTotal: packet.total,
-          };
-          // If zipping arrived early and all images are now done, apply it now.
-          if (allImagesDone && this.pendingZipping) {
-            const z = this.pendingZipping;
-            this.pendingZipping = null;
-            this.emit(); // emit the final images state first
-            this.currentProgress = {
-              ...this.currentProgress,
-              state: 'zipping',
-              archivingChapters: z.chapters ?? null,
-              archivingFormat: z.format ?? null,
-            };
-          }
+      case 'progress': {
+        // Two pipelined page-level phases: 'downloading' then 'building'. Total is
+        // shared across both, so always refresh it. Once 'building' has started,
+        // ignore late 'downloading' packets for phase/done so the view doesn't
+        // flip back — but still keep the total current (more chapters may resolve).
+        if (packet.phase === 'downloading' && this.currentProgress.phase === 'building') {
+          this.currentProgress = { ...this.currentProgress, total: packet.total };
+          this.emit();
+          break;
         }
+        const pct = packet.total ? Math.round((packet.done / packet.total) * 100) : 0;
+        console.log(`[DownloadService] ← progress/${packet.phase} | done=${packet.done}/${packet.total} (${pct}%)`);
+        this.currentProgress = {
+          ...this.currentProgress,
+          state: 'downloading',
+          phase: packet.phase,
+          done: packet.done,
+          total: packet.total,
+        };
         this.emit();
         break;
+      }
 
       case 'completed':
         console.log(`[DownloadService] ← completed | total=${packet.total} archive_url=${packet.archive_url}`);
         this.currentProgress = {
           ...this.currentProgress,
-          state: 'downloading',
+          state: 'saving',
         };
         this.emit();
         this.downloadArchive(packet.archive_url);
@@ -288,17 +250,6 @@ export class DownloadService implements OnDestroy {
         this.emit();
         break;
 
-      case 'archiving':
-        console.log(`[DownloadService] ← archiving | chapters=${packet.chapters} format=${packet.format} — image fetch + ${(packet.format ?? '').toUpperCase()} build starting`);
-        this.currentProgress = {
-          ...this.currentProgress,
-          state: 'archiving',
-          archivingChapters: packet.chapters ?? null,
-          archivingFormat: packet.format ?? null,
-        };
-        this.emit();
-        break;
-
       case 'chapter_report':
         console.log(`[DownloadService] ← chapter_report | chapter="${packet.chapter}" status=${packet.status}`);
         this.currentProgress = {
@@ -308,25 +259,19 @@ export class DownloadService implements OnDestroy {
         this.emit();
         break;
 
-      case 'zipping': {
-        const imagesDone = this.currentProgress.imagesDone >= this.currentProgress.imagesTotal
-          && this.currentProgress.imagesTotal > 0;
-        if (imagesDone) {
-          console.log(`[DownloadService] ← zipping | chapters=${packet.chapters} format=${packet.format} — writing outer ZIP (may be silent for ~2 min on large archives)`);
-          this.currentProgress = {
-            ...this.currentProgress,
-            state: 'zipping',
-            archivingChapters: packet.chapters ?? null,
-            archivingFormat: packet.format ?? null,
-          };
-          this.emit();
-        } else {
-          console.log(`[DownloadService] ← zipping | chapters=${packet.chapters} format=${packet.format} — buffering (images still in flight: ${this.currentProgress.imagesDone}/${this.currentProgress.imagesTotal})`);
-          this.pendingZipping = packet;
-          // Do not emit — UI stays in 'images' state until the last image packet arrives.
-        }
+      case 'zipping':
+        // Sent after every chapter has been built, right before the outer ZIP is
+        // written. With the unified phase there are no in-flight image packets to
+        // race, so this transition is unconditional.
+        console.log(`[DownloadService] ← zipping | chapters=${packet.chapters} format=${packet.format} — writing outer ZIP (may be silent for ~2 min on large archives)`);
+        this.currentProgress = {
+          ...this.currentProgress,
+          state: 'zipping',
+          archivingChapters: packet.chapters ?? null,
+          archivingFormat: packet.format ?? null,
+        };
+        this.emit();
         break;
-      }
     }
   }
 

@@ -12,7 +12,6 @@ import {SelectButtonModule} from 'primeng/selectbutton';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
-import {UpperCasePipe} from '@angular/common';
 import {AccordionModule} from 'primeng/accordion';
 import {TagModule} from 'primeng/tag';
 import {TooltipModule} from 'primeng/tooltip';
@@ -32,7 +31,6 @@ interface FormatOption {
     ProgressBarModule,
     TranslateModule,
     FormsModule,
-    UpperCasePipe,
     AccordionModule,
     TagModule,
     TooltipModule,
@@ -68,14 +66,19 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
     return this.progress?.state ?? 'idle';
   }
 
-  get chaptersPercent(): number {
-    if (!this.progress?.chaptersTotal) return 0;
-    return Math.round((this.progress.chaptersDone / this.progress.chaptersTotal) * 100);
+  get percent(): number {
+    if (!this.progress?.total) return 0;
+    return Math.round((this.progress.done / this.progress.total) * 100);
   }
 
-  get imagesPercent(): number {
-    if (!this.progress?.imagesTotal) return 0;
-    return Math.round((this.progress.imagesDone / this.progress.imagesTotal) * 100);
+  /** Current page-level phase: 'downloading' images, then 'building' the archive. */
+  get phase(): 'downloading' | 'building' {
+    return this.progress?.phase ?? 'downloading';
+  }
+
+  /** True once the archive-building phase has started (the slow, CPU-bound step). */
+  get isBuilding(): boolean {
+    return this.state === 'downloading' && this.phase === 'building';
   }
 
   get selectedFormatDesc(): string {
@@ -84,7 +87,7 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
 
   get isClosable(): boolean {
     const s = this.state;
-    return s !== 'pending' && s !== 'connecting' && s !== 'chapters' && s !== 'archiving' && s !== 'images' && s !== 'zipping' && s !== 'downloading';
+    return s !== 'pending' && s !== 'connecting' && s !== 'downloading' && s !== 'zipping' && s !== 'saving';
   }
 
   get chapterReports(): WsPacketChapterReport[] {
@@ -137,20 +140,6 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
   reportIconClass(status: ArchiverChapterStatus | undefined): string {
     if (status === ArchiverChapterStatus.ChapterStatusIncomplete) return 'pi pi-exclamation-triangle text-yellow-400';
     return 'pi pi-times-circle text-red-400';
-  }
-
-  /**
-   * Returns "X / 3" for the three trackable steps, null for connecting/downloading/completed.
-   * Shown as a small ambient label — not interactive.
-   */
-  get stepLabel(): string | null {
-    switch (this.state) {
-      case 'chapters':             return '1 / 3';
-      case 'archiving':
-      case 'images':               return '2 / 3';
-      case 'zipping':              return '3 / 3';
-      default:                     return null;
-    }
   }
 
   ngOnInit(): void {

@@ -10,13 +10,6 @@
   <ng-template #header>
     <div class="w-full inline-flex items-center justify-between gap-2">
       <p class="p-dialog-title w-full">{{'download.title' | translate}}</p>
-      @if (state !== 'idle' && state !== 'error') {
-
-        <!-- Ambient step counter — only shown for the 3 trackable steps -->
-        @if (stepLabel) {
-          <p class="text-nowrap text-xs text-surface-400">{{ 'download.step-label' | translate : { label: stepLabel } }}</p>
-        }
-      }
     </div>
   </ng-template>
 
@@ -69,46 +62,29 @@
       </div>
     }
 
-    <!-- Fetching chapters -->
-    @if (state === 'chapters') {
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-3 text-sm text-surface-500">
-          <i class="pi pi-spin pi-spinner text-primary-500"></i>
-          <span>{{ 'download.progress.fetching-chapters' | translate }}</span>
-        </div>
-        <div class="flex justify-between text-sm text-surface-400">
-          <span>{{ 'download.progress.chapters' | translate : { done: progress?.chaptersDone, total: progress?.chaptersTotal } }}</span>
-          <span>{{ chaptersPercent }}%</span>
-        </div>
-        <p-progressbar [value]="chaptersPercent" [showValue]="false" styleClass="h-2 rounded-full"/>
-      </div>
-    }
-
-    <!-- Archiving / Images / Zipping — split layout when reports are available -->
-    @if (state === 'archiving' || state === 'images' || state === 'zipping') {
+    <!-- Downloading (unified: page-list resolution + image download) / Zipping -->
+    @if (state === 'downloading' || state === 'zipping') {
       <div class="flex flex-col gap-6">
 
         <!-- Progress -->
         <div class="flex flex-col gap-4">
 
-          @if (state === 'archiving') {
+          @if (state === 'downloading') {
             <div class="flex items-center gap-3 text-sm text-surface-500">
               <i class="pi pi-spin pi-spinner text-primary-500"></i>
-              <span>{{ 'download.progress.archiving' | translate : { format: (progress?.archivingFormat ?? '' | uppercase) } }}</span>
+              <span>{{ (isBuilding ? 'download.progress.building-archive' : 'download.progress.downloading-images') | translate }}</span>
             </div>
-            <p-progressbar mode="indeterminate" styleClass="h-2 rounded-full"/>
-          }
 
-          @if (state === 'images') {
-            <div class="flex items-center gap-3 text-sm text-surface-500">
-              <i class="pi pi-spin pi-spinner text-primary-500"></i>
-              <span>{{ 'download.progress.building-archive' | translate }}</span>
-            </div>
-            <div class="flex justify-between text-sm text-surface-400">
-              <span>{{ 'download.progress.images' | translate : { done: progress?.imagesDone, total: progress?.imagesTotal } }}</span>
-              <span>{{ imagesPercent }}%</span>
-            </div>
-            <p-progressbar [value]="imagesPercent" [showValue]="false" styleClass="h-2 rounded-full"/>
+            @if (progress && progress.total > 0) {
+              <div class="flex justify-between text-sm text-surface-400">
+                <span>{{ (isBuilding ? 'download.progress.pages' : 'download.progress.images') | translate : { done: progress.done, total: progress.total } }}</span>
+                <span>{{ percent }}%</span>
+              </div>
+              <p-progressbar [value]="percent" [showValue]="false" styleClass="h-2 rounded-full"/>
+            } @else {
+              <!-- Resolving chapter page lists (total not known yet). -->
+              <p-progressbar mode="indeterminate" styleClass="h-2 rounded-full"/>
+            }
           }
 
           @if (state === 'zipping') {
@@ -117,30 +93,6 @@
               <p class="text-sm text-surface-500">{{ 'download.progress.zipping' | translate }}</p>
             </div>
           }
-
-          <!-- Summary badges -->
-          <!--@if (hasReports) {
-            <div class="flex flex-col gap-1 pt-1">
-              @if (reportSummary.failed > 0) {
-                <div class="flex items-center gap-2 text-xs text-red-400">
-                  <i class="pi pi-times-circle"></i>
-                  <span>{{ reportSummary.failed }} failed</span>
-                </div>
-              }
-              @if (reportSummary.incomplete > 0) {
-                <div class="flex items-center gap-2 text-xs text-yellow-400">
-                  <i class="pi pi-exclamation-triangle"></i>
-                  <span>{{ reportSummary.incomplete }} incomplete</span>
-                </div>
-              }
-              @if (reportSummary.success > 0) {
-                <div class="flex items-center gap-2 text-xs text-green-400">
-                  <i class="pi pi-check-circle"></i>
-                  <span>{{ reportSummary.success }} succeeded</span>
-                </div>
-              }
-            </div>
-          }-->
         </div>
 
         <!-- Chapter report list -->
@@ -212,8 +164,8 @@
       </div>
     }
 
-    <!-- Downloading blob -->
-    @if (state === 'downloading') {
+    <!-- Saving the assembled archive blob to the browser -->
+    @if (state === 'saving') {
       <div class="flex flex-col items-center gap-4 py-6">
         <i class="pi pi-spin pi-spinner text-4xl text-primary-500"></i>
         <p class="text-sm text-surface-500">{{ 'download.downloading-archive' | translate }}</p>

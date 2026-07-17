@@ -67,7 +67,6 @@
     "cancel": "Cancel",
     "pending": "Connecting, please wait…",
     "downloading-archive": "Preparing your file… (this may take a few minutes)",
-    "step-label": "Step {{label}}",
     "format": {
       "label": "Output format",
       "pdf-desc": "Best for phones and universal readers.",
@@ -79,8 +78,10 @@
       "chapters": "{{done}} / {{total}} chapters",
       "archiving": "Building {{format}} archive…",
       "zipping": "Writing ZIP… (this may take a few minutes)",
+      "downloading-images": "Downloading images…",
       "building-archive": "Building archive…",
-      "images": "{{done}} / {{total}} images"
+      "images": "{{done}} / {{total}} images",
+      "pages": "{{done}} / {{total}} pages"
     },
     "completed": {
       "title": "Your download is ready!",
@@ -102,14 +103,14 @@
   "privacy": {
     "agreement": {
       "notice": "This Privacy Notice for Offtoon (\"we,\" \"us,\" or \"our\"), describes how and why we might access, collect, store, use, and/or share (\"process\") your personal information when you use our services (\"Services\"), including when you:",
-      "questions": "<span class=\"font-medium\">Questions or concerns?</span> Reading this Privacy Notice will help you understand your privacy rights and choices. We are responsible for making decisions about how your personal information is processed. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at <a href=\"mailto:contact@freits.fr\">contact&#64;freits.fr</a>.",
+      "questions": "<span class=\"font-medium\">Questions or concerns?</span> Reading this Privacy Notice will help you understand your privacy rights and choices. We are responsible for making decisions about how your personal information is processed. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at <a href=\"mailto:contact@matthieu-freitag.com\">contact&#64;matthieu-freitag.com</a>.",
       "title": "AGREEMENT TO OUR PRIVACY POLICY",
       "website": "Visit our website at <a href=\"https://www.offtoon.freits.fr\" target=\"_blank\">https://www.offtoon.freits.fr</a>, or any website of ours that links to this Privacy Notice"
     },
     "contact": {
       "company": "Offtoon",
       "country": "France",
-      "email": "contact&#64;freits.fr",
+      "email": "contact&#64;matthieu-freitag.com",
       "intro": "If you have questions or comments about this notice, you may email us at:",
       "title": "7. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?"
     },
@@ -181,7 +182,7 @@
     "agreement": {
       "binding": "These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity (\"you\"), and Offtoon, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE LEGAL TERMS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICES AND YOU MUST DISCONTINUE USE IMMEDIATELY.",
       "company": "We are Offtoon (\"Company,\" \"we,\" \"us,\" \"our\").",
-      "contact": "You can contact us by email at <a href=\"mailto:contact@freits.fr\">contact&#64;freits.fr</a>.",
+      "contact": "You can contact us by email at <a href=\"mailto:contact@matthieu-freitag.com\">contact&#64;matthieu-freitag.com</a>.",
       "print": "We recommend that you print a copy of these Legal Terms for your records.",
       "title": "AGREEMENT TO OUR LEGAL TERMS",
       "website": "We operate the website <a href=\"https://www.offtoon.freits.fr\" target=\"_blank\">https://www.offtoon.freits.fr</a> (the \"Site\"), as well as any other related products and services that refer or link to these legal terms (the \"Legal Terms\") (collectively, the \"Services\")."
@@ -189,7 +190,7 @@
     "contact": {
       "company": "Offtoon",
       "country": "France",
-      "email": "contact&#64;freits.fr",
+      "email": "contact&#64;matthieu-freitag.com",
       "intro": "In order to resolve a complaint regarding the Services or to receive further information regarding use of the Services, please contact us at:",
       "title": "12. CONTACT US"
     },

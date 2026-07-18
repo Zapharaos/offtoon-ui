@@ -5,6 +5,7 @@ import {ApiSource} from '@core/api/model/apiSource';
 import {ToonChapter} from '@core/api/model/toonChapter';
 import {NotificationUtilsService} from '@shared/services/notification-utils.service';
 import {DownloadFormat, DownloadProgress, DownloadService, WsPacketChapterReport} from '@shared/services/download.service';
+import {AnalyticsService} from '@core/services/analytics.service';
 import {ArchiverChapterStatus} from '@core/api/model/archiverChapterStatus';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
@@ -49,6 +50,7 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
   private downloadService = inject(DownloadService);
   private toonService = inject(ToonService);
   private notificationUtils = inject(NotificationUtilsService);
+  private analytics = inject(AnalyticsService);
 
   private sub: Subscription | null = null;
 
@@ -156,7 +158,7 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
   }
 
   onHide(): void {
-    if (!this.isClosable) return; // guard — PrimeNG closable binding handles this too
+    if (!this.isClosable) return; // guard - PrimeNG closable binding handles this too
     this.downloadService.reset();
     this.visibleChange.emit(false);
   }
@@ -164,6 +166,12 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
   startDownload(): void {
     const chapterIds = this.chapters.map(c => c.id!).filter(Boolean);
     if (!chapterIds.length) return;
+
+    this.analytics.track('download-start', {
+      source: this.source,
+      chapters: chapterIds.length,
+      format: this.selectedFormat,
+    });
 
     // Reset immediately so stale progress from a previous run is cleared
     // before the POST response arrives and connectAndTrack() is called.

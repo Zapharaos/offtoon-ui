@@ -1,0 +1,14 @@
+{
+  "name": "Offtoon",
+  "short_name": "Offtoon",
+  "description": "Search and download webtoons, manhwa and manhua as PDF, CBZ or images - read offline, anywhere.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "icons": [
+    { "src": "/assets/img/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/assets/img/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" }
+  ]
+}

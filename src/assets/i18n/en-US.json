@@ -3,6 +3,31 @@
     "title": "Offtoon",
     "author": "Matthieu Freitag"
   },
+  "seo": {
+    "default": {
+      "title": "Offtoon - Download webtoons, manhwa & manhua",
+      "desc": "Offtoon lets you search and download webtoons, manhwa and manhua from popular sources as PDF, CBZ or image archives - read offline, anywhere."
+    },
+    "home": {
+      "title": "Offtoon - Download webtoons, manhwa & manhua offline",
+      "desc": "Search webtoons, manhwa and manhua and download chapters as PDF, CBZ or images to read offline. Fast, free and no account required."
+    },
+    "terms": {
+      "title": "Terms of Service - Offtoon",
+      "desc": "The terms governing your use of Offtoon, the webtoon search and download service."
+    },
+    "privacy": {
+      "title": "Privacy Policy - Offtoon",
+      "desc": "How Offtoon handles your data: privacy-friendly, cookieless anonymous analytics and no personal data collection."
+    },
+    "breadcrumb": {
+      "home": "Home"
+    },
+    "og": {
+      "title": "Download webtoons, manhwa & manhua",
+      "subtitle": "Read offline - export chapters as PDF, CBZ or images."
+    }
+  },
   "footer": {
     "copyright": "© {{year}} Offtoon by ",
     "privacy-policy": "Privacy Policy",
@@ -54,7 +79,7 @@
       "number": "#",
       "title": "Title",
       "date": "Date",
-      "no-title": "—",
+      "no-title": "-",
       "open-chapter": "Open chapter",
       "empty": "No chapters available.",
       "download": "Download"
@@ -115,7 +140,7 @@
       "title": "7. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?"
     },
     "cookies": {
-      "description": "Offtoon does not use cookies.",
+      "description": "Offtoon does not use cookies. Its analytics (self-hosted Umami) is cookieless and does not store any identifier on your device. Limited browser local storage may be used solely to remember your preferences (such as theme).",
       "title": "2. DO WE USE COOKIES?"
     },
     "external-links": {
@@ -124,11 +149,11 @@
     },
     "info-collect": {
       "automatic": {
-        "intro": "The information we collect includes:",
+        "intro": "Offtoon uses privacy-friendly, cookieless analytics (self-hosted Umami) to understand aggregate usage. Specifically:",
         "no-advertising": "No advertising",
-        "no-analytics": "No analytics",
-        "no-profiling": "No profiling",
-        "no-tracking": "No tracking",
+        "no-analytics": "Anonymous usage analytics only (page views and feature events) - never linked to your identity",
+        "no-profiling": "No profiling and no personal data",
+        "no-tracking": "No cross-site or cross-device tracking",
         "title": "Information automatically collected"
       },
       "personal": {

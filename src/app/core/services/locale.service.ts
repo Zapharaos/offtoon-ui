@@ -1,5 +1,5 @@
-import { Injectable, Inject, LOCALE_ID } from '@angular/core';
-import {registerLocaleData} from "@angular/common";
+import { Injectable, Inject, LOCALE_ID, PLATFORM_ID, inject } from '@angular/core';
+import {isPlatformBrowser, registerLocaleData} from "@angular/common";
 import {TranslateService} from "@ngx-translate/core";
 import { VALID_LOCALES, DEFAULT_LOCALE_CONFIG, getLocaleConfig, LocaleConfig } from '@core/config/locale.config';
 
@@ -12,6 +12,7 @@ export const DEFAULT_LOCALE = DEFAULT_LOCALE_CONFIG.angularLocale;
 export class LocaleService {
   private loadedAngularLocales = new Set<string>();
   private currentLocaleConfig: LocaleConfig = DEFAULT_LOCALE_CONFIG;
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor(@Inject(LOCALE_ID) private localeId: string) {
     // Validate that the injected LOCALE_ID matches our default
@@ -19,8 +20,12 @@ export class LocaleService {
       console.warn(`LOCALE_ID (${localeId}) doesn't match DEFAULT_LOCALE (${DEFAULT_LOCALE}). Using DEFAULT_LOCALE.`);
     }
 
-    // Initialize default locale in background (intentionally not awaited)
-    void this.initializeDefaultLocale();
+    // Initialize default locale in background (intentionally not awaited).
+    // Browser-only : le dynamic import de locale est async et ferait échouer le
+    // prerender (NG0401 « async qui survit au rendu »). en-US par défaut suffit au SSG.
+    if (this.isBrowser) {
+      void this.initializeDefaultLocale();
+    }
   }
 
   /**

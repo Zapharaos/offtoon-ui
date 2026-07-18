@@ -30,7 +30,22 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "robots.txt",
+                "input": "src",
+                "output": "."
+              },
+              {
+                "glob": "sitemap.xml",
+                "input": "src",
+                "output": "."
+              },
+              {
+                "glob": "sitemap.xsl",
+                "input": "src",
+                "output": "."
+              }
             ],
             "styles": [
               "src/styles.scss"
@@ -38,11 +53,18 @@
             "scripts": []
           },
           "configurations": {
+            "ssg": {
+              "server": "src/main.server.ts",
+              "prerender": {
+                "discoverRoutes": false,
+                "routesFile": "prerender-routes.txt"
+              }
+            },
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "750kB",
                   "maximumError": "1MB"
                 },
                 {

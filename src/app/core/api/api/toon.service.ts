@@ -11,7 +11,7 @@
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpContext 
+         HttpResponse, HttpEvent, HttpContext
         }       from '@angular/common/http';
 import { Observable }                                        from 'rxjs';
 import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
@@ -118,7 +118,7 @@ export class ToonService extends BaseService {
 
     /**
      * Retrieve the assembled archive for a completed download job
-     * Returns the ZIP archive built after a download job completes. The archive URL is provided in the PacketCompleted WebSocket message. This endpoint can only be called once per job — the file is removed from memory after it is served.
+     * Returns the ZIP archive built after a download job completes. The archive URL is provided in the PacketCompleted WebSocket message. This endpoint can only be called once per job - the file is removed from memory after it is served.
      * @endpoint get /api/v1/download/{runtimeID}/archive
      * @param runtimeID Runtime ID returned by POST /download
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -164,7 +164,7 @@ export class ToonService extends BaseService {
 
     /**
      * Connect to a download job via WebSocket
-     * Upgrades the HTTP connection to a WebSocket and streams live progress packets for the given download runtime. \\n\\nPacket sequence:\\n  1. PacketInit — connection confirmed.\\n  2. PacketProgress (phase&#x3D;\&quot;chapters\&quot;) — chapter metadata scraped; items[] contains chapter objects with page URLs.\\n  3. PacketProgress (phase&#x3D;\&quot;images\&quot;) — page images being downloaded; items&#x3D;[], total&#x3D;image count, done increments per image.\\n  4. PacketCompleted — archive ready; fetch it via archive_url.\\n  OR PacketFatal — something went wrong; step indicates the failing stage.
+     * Upgrades the HTTP connection to a WebSocket and streams live progress packets for the given download runtime. \\n\\nPacket sequence:\\n  1. PacketInit - connection confirmed.\\n  2. PacketProgress (phase&#x3D;\&quot;chapters\&quot;) - chapter metadata scraped; items[] contains chapter objects with page URLs.\\n  3. PacketProgress (phase&#x3D;\&quot;images\&quot;) - page images being downloaded; items&#x3D;[], total&#x3D;image count, done increments per image.\\n  4. PacketCompleted - archive ready; fetch it via archive_url.\\n  OR PacketFatal - something went wrong; step indicates the failing stage.
      * @endpoint get /api/v1/download/{runtimeID}/ws
      * @param runtimeID Runtime ID returned by POST /download
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

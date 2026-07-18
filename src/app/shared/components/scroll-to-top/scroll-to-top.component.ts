@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Button } from 'primeng/button';
 import {TranslatePipe} from '@ngx-translate/core';
 
@@ -14,6 +14,7 @@ export class ScrollToTopComponent implements OnInit, AfterViewInit, OnDestroy {
   isVisible = false;
   private scrollContainer: HTMLElement | null = null;
   private boundOnScroll: () => void;
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor(private cdr: ChangeDetectorRef) {
     this.boundOnScroll = this.onScroll.bind(this);
@@ -24,6 +25,8 @@ export class ScrollToTopComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    // Browser-only : le setTimeout/addEventListener ferait échouer le prerender (NG0401).
+    if (!this.isBrowser) return;
     // Use setTimeout to ensure DOM is fully rendered
     setTimeout(() => {
       // Find the scrollable container (the div with overflow-y-auto)

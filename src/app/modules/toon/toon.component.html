@@ -99,6 +99,7 @@
               [href]="toon.source_url"
               target="_blank"
               rel="noopener noreferrer"
+              (click)="onViewSource()"
               class="text-sm text-primary-500 hover:underline w-fit"
             >
               {{ 'toon.view-source' | translate }}

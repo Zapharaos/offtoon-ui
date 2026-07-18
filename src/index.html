@@ -2,10 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Offtoon</title>
+  <title>Offtoon - Download webtoons, manhwa & manhua</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="assets/img/logov3.png">
+
+  <!-- Icons + PWA -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/img/icon-512.png">
+  <link rel="apple-touch-icon" href="assets/img/icon-192.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121212">
+
+  <!-- SEO - valeurs par défaut (surchargées par route via SeoService) -->
+  <meta name="description" content="Offtoon lets you search and download webtoons, manhwa and manhua from popular sources as PDF, CBZ or image archives - read offline, anywhere.">
+  <link rel="canonical" href="https://offtoon.freits.fr/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Offtoon">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Offtoon - Download webtoons, manhwa & manhua">
+  <meta property="og:description" content="Search webtoons, manhwa and manhua and download chapters as PDF, CBZ or images to read offline.">
+  <meta property="og:url" content="https://offtoon.freits.fr/">
+  <meta property="og:image" content="https://offtoon.freits.fr/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Offtoon - Download webtoons, manhwa & manhua">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Offtoon - Download webtoons, manhwa & manhua">
+  <meta name="twitter:description" content="Search webtoons, manhwa and manhua and download chapters to read offline.">
+  <meta name="twitter:image" content="https://offtoon.freits.fr/assets/img/og.png">
+
+  <!-- Preconnect to source CDN for faster cover/page images -->
+  <link rel="preconnect" href="https://cdn.asurascans.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.asurascans.com">
+
+  <!-- Données structurées (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Offtoon",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web",
+    "url": "https://offtoon.freits.fr/",
+    "description": "Offtoon lets you search and download webtoons, manhwa and manhua from popular sources as PDF, CBZ or image archives - read offline, anywhere.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "inLanguage": "en"
+  }
+  </script>
 </head>
 <body>
   <app-root></app-root>

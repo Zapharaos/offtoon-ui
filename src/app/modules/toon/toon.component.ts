@@ -11,6 +11,7 @@ import {ToonSource} from '@core/api/model/toonSource';
 import {ToonStatus} from '@core/api/model/toonStatus';
 import {ApiSource} from '@core/api/model/apiSource';
 import {NotificationUtilsService} from '@shared/services/notification-utils.service';
+import {AnalyticsService} from '@core/services/analytics.service';
 import {SkeletonModule} from 'primeng/skeleton';
 import {TableModule} from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
@@ -52,7 +53,13 @@ export class ToonComponent implements OnInit {
     private router: Router,
     private toonService: ToonService,
     private notificationUtils: NotificationUtilsService,
+    private analytics: AnalyticsService,
   ) {}
+
+  /** Tracks an outbound click to the source site (e.g. asurascans). */
+  onViewSource(): void {
+    this.analytics.trackOutbound(this.toon?.source_url, 'toon');
+  }
 
   ngOnInit(): void {
     const source = this.route.snapshot.paramMap.get('source') as ApiSource;

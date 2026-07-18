@@ -50,7 +50,7 @@ pnpm start
 ng serve
 ```
 
-The application will be available at `http://localhost:4200/`. The dev server uses hot reload — any changes to source files will automatically refresh the browser.
+The application will be available at `http://localhost:4200/`. The dev server uses hot reload - any changes to source files will automatically refresh the browser.
 
 ### Development Environment
 

@@ -109,7 +109,7 @@ export class DownloadService implements OnDestroy {
   }
 
   connectAndTrack(runtimeId: string, slug: string): void {
-    console.log(`[DownloadService] connectAndTrack() — runtimeId=${runtimeId}`);
+    console.log(`[DownloadService] connectAndTrack() - runtimeId=${runtimeId}`);
     this.slug = slug;
     this.closeWs();
 
@@ -124,7 +124,7 @@ export class DownloadService implements OnDestroy {
 
   private readonly MAX_RETRIES = 5;
   private readonly RETRY_BASE_MS = 800;
-  /** 5-minute inactivity timeout — reset on every message */
+  /** 5-minute inactivity timeout - reset on every message */
   private readonly INACTIVITY_MS = 5 * 60 * 1000;
 
   private openWs(runtimeId: string, attempt: number): void {
@@ -158,7 +158,7 @@ export class DownloadService implements OnDestroy {
       this.clearTimeout();
       console.log(`[DownloadService] WebSocket closed (code=${evt.code}, reason="${evt.reason}", wasClean=${evt.wasClean})`);
       if (this.ws !== ws) {
-        console.log(`[DownloadService] Stale socket close — ignoring`);
+        console.log(`[DownloadService] Stale socket close - ignoring`);
         return;
       }
 
@@ -185,7 +185,7 @@ export class DownloadService implements OnDestroy {
   private handlePacket(packet: WsPacket): void {
     switch (packet.type) {
       case 'init':
-        console.log(`[DownloadService] ← init | WS handshake accepted — transitioning to "connecting"`);
+        console.log(`[DownloadService] ← init | WS handshake accepted - transitioning to "connecting"`);
         this.currentProgress = {
           ...this.currentProgress,
           state: 'connecting',
@@ -208,7 +208,7 @@ export class DownloadService implements OnDestroy {
         // Two pipelined page-level phases: 'downloading' then 'building'. Total is
         // shared across both, so always refresh it. Once 'building' has started,
         // ignore late 'downloading' packets for phase/done so the view doesn't
-        // flip back — but still keep the total current (more chapters may resolve).
+        // flip back - but still keep the total current (more chapters may resolve).
         if (packet.phase === 'downloading' && this.currentProgress.phase === 'building') {
           this.currentProgress = { ...this.currentProgress, total: packet.total };
           this.emit();
@@ -263,7 +263,7 @@ export class DownloadService implements OnDestroy {
         // Sent after every chapter has been built, right before the outer ZIP is
         // written. With the unified phase there are no in-flight image packets to
         // race, so this transition is unconditional.
-        console.log(`[DownloadService] ← zipping | chapters=${packet.chapters} format=${packet.format} — writing outer ZIP (may be silent for ~2 min on large archives)`);
+        console.log(`[DownloadService] ← zipping | chapters=${packet.chapters} format=${packet.format} - writing outer ZIP (may be silent for ~2 min on large archives)`);
         this.currentProgress = {
           ...this.currentProgress,
           state: 'zipping',
@@ -279,7 +279,7 @@ export class DownloadService implements OnDestroy {
     const url = archiveUrl.startsWith('http')
       ? archiveUrl
       : `${environment.apiUrl}${archiveUrl}`;
-    console.log(`[DownloadService] Fetching archive blob — GET ${url}`);
+    console.log(`[DownloadService] Fetching archive blob - GET ${url}`);
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -297,7 +297,7 @@ export class DownloadService implements OnDestroy {
       document.body.removeChild(a);
       URL.revokeObjectURL(objectUrl);
 
-      console.log(`[DownloadService] Archive offered to browser (${(blob.size / 1024 / 1024).toFixed(2)} MB) — closing WS`);
+      console.log(`[DownloadService] Archive offered to browser (${(blob.size / 1024 / 1024).toFixed(2)} MB) - closing WS`);
       this.closeWs();
       this.currentProgress = {
         ...this.currentProgress,
@@ -316,7 +316,7 @@ export class DownloadService implements OnDestroy {
       case 1: return 'Failed to find the toon on the source site.';
       case 2: return 'Failed to fetch toon metadata.';
       case 3: return 'Failed to retrieve chapter page list.';
-      case 4: return 'Failed to download chapter images — the CDN may be unreachable.';
+      case 4: return 'Failed to download chapter images - the CDN may be unreachable.';
       default: return 'An unexpected server error occurred.';
     }
   }

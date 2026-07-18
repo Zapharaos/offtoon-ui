@@ -3,6 +3,7 @@ import {BasicLayoutComponent} from '@shared/layouts/basic-layout/basic-layout.co
 import {FormsModule} from '@angular/forms';
 import {ScrollToTopComponent} from '@shared/components/scroll-to-top/scroll-to-top.component';
 import {ToonService} from '@core/api/api/toon.service';
+import {AnalyticsService} from '@core/services/analytics.service';
 import {ApiSource} from '@core/api/model/apiSource';
 import {ToonSearchResult} from '@core/api/model/toonSearchResult';
 import {ToonSource} from '@core/api/model/toonSource';
@@ -70,6 +71,7 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslateService,
+    private analytics: AnalyticsService,
   ) {
     this.sortOptions = [
       {label: this.translate.instant('home.search.sort.az'),            value: 'az'},
@@ -200,10 +202,16 @@ export class HomeComponent implements OnInit {
         next: (data) => {
           this.results = data ?? [];
           this.searched = true;
+          const query = (body.input ?? '').slice(0, 100);
+          this.analytics.track('search', { result_count: this.results.length, query, sources: body.sources });
+          if (this.results.length === 0) {
+            this.analytics.track('search-no-results', { query });
+          }
         },
         error: (err) => {
           this.notificationUtils.showToastError('Search failed', err);
           this.searched = true;
+          this.analytics.track('search-error', { query: (body.input ?? '').slice(0, 100) });
         },
       });
   }

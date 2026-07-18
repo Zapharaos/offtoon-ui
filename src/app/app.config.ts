@@ -1,6 +1,6 @@
 import {ApplicationConfig, LOCALE_ID, provideZoneChangeDetection} from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
 import {provideTranslateService} from "@ngx-translate/core";
 import {provideTranslateHttpLoader} from "@ngx-translate/http-loader";
@@ -12,14 +12,18 @@ import {PresetDefault} from '../assets/presets/default';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {environment} from '../environments/environment';
 import {provideApi} from '@core/api';
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {prerenderInterceptor} from '@core/interceptors/prerender.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
-    provideAnimationsAsync(),
-    provideHttpClient(),
+    provideAnimations(),
+    provideHttpClient(withInterceptors([
+      // prerenderInterceptor doit rester en premier (coupe HTTP au prerender).
+      prerenderInterceptor,
+    ])),
     provideApi(environment.apiUrl),
     providePrimeNG({
       theme: {

@@ -1,3 +1,8 @@
+![GitHub License](https://img.shields.io/github/license/Zapharaos/offtoon-ui)
+![Angular](https://img.shields.io/badge/Angular-19-DD0031?logo=angular&logoColor=white)
+
+**Backend:** [offtoon-backend](https://github.com/Zapharaos/offtoon-backend)
+
 # Offtoon
 
 **Offtoon** is a modern web application for searching, browsing, and downloading webtoons and manga chapters from various online sources. It provides a streamlined interface to search for toons, explore chapter lists, and download content in multiple formats (PDF, CBZ, or raw images) with real-time progress tracking via WebSocket.
@@ -93,10 +98,11 @@ Tests are written using Jasmine and run in a Chrome browser instance.
 ### Building for Production
 
 ```bash
-pnpm build
-# or
-ng build
+pnpm build        # CSR build
+pnpm build:ssg    # + prerender (SSG) of public pages
 ```
+
+> Use **`pnpm build`**, not `ng build` alone — the script regenerates the sitemap + prerender routes first.
 
 Production build artifacts will be generated in the `dist/offtoon-ui/` directory. The production build:
 - Uses `src/environments/environment.ts` configuration
@@ -113,7 +119,6 @@ Edit `src/environments/environment.ts`:
 ```typescript
 export const environment = {
   production: true,
-  tableSetHideIndex: true,
   apiUrl: 'https://your-production-api.com',
   wsUrl: 'wss://your-production-api.com'
 };
@@ -155,10 +160,13 @@ The application uses PrimeNG with custom Tailwind CSS theming. Theme configurati
 
 ```bash
 pnpm start          # Start development server
-pnpm build          # Build for production
+pnpm build          # Regenerate sitemap/prerender-routes then build (CSR)
+pnpm build:ssg      # + prerender (SSG) of public pages
 pnpm test           # Run unit tests
 pnpm watch          # Build in watch mode
 ```
+
+> Use **`pnpm build`**, not `ng build` alone: the script regenerates the sitemap + prerender routes first.
 
 ## 🤝 Contributing
 

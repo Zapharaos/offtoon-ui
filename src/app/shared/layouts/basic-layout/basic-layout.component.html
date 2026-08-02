@@ -14,6 +14,15 @@
           <!-- Title -->
           <h1 class="text-2xl font-bold">{{ "app.title" | translate }}</h1>
         </div>
+
+        <!-- Nav links -->
+        <nav class="flex items-center gap-1">
+          <a routerLink="/library" routerLinkActive="nav-link-active"
+             class="nav-link" title="My Library">
+            <i class="pi pi-book"></i>
+            <span class="nav-link-label">Library</span>
+          </a>
+        </nav>
       </div>
     </div>
   </header>

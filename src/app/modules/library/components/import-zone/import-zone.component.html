@@ -1,0 +1,72 @@
+<p-dialog
+  [visible]="visible"
+  (visibleChange)="close()"
+  [modal]="true"
+  [closable]="!isBusy"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="import-dialog w-full max-w-lg"
+  header="Import .offtoon file">
+
+  <div class="import-body flex flex-col gap-6 py-2">
+
+    <!-- Drop zone (shown when idle or error) -->
+    @if (isIdle) {
+      <div
+        class="drop-zone flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed p-10 transition-colors cursor-pointer"
+        [class.drag-over]="isDragging"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave()"
+        (drop)="onDrop($event)"
+        (click)="openFilePicker()"
+        (keydown.enter)="openFilePicker()"
+        tabindex="0"
+        role="button"
+        aria-label="Drop .offtoon file or click to browse">
+
+        <i class="pi pi-file-import text-5xl text-primary opacity-60"></i>
+        <div class="text-center">
+          <p class="font-semibold">Drop your <code class="text-primary">.offtoon</code> file here</p>
+          <p class="text-light text-sm mt-1">or click to browse</p>
+        </div>
+
+        @if (progress?.phase === 'error') {
+          <p class="text-red-400 text-sm text-center">{{ progress?.error }}</p>
+        }
+      </div>
+    }
+
+    <!-- Progress (shown while importing) -->
+    @if (!isIdle) {
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-3">
+          <i [class]="phaseIcon"
+             [class.text-green-400]="progress?.phase === 'done'"
+             [class.text-red-400]="progress?.phase === 'error'"
+             [class.text-primary]="isBusy"
+             class="text-xl"></i>
+          <span class="text-sm">{{ phaseLabel }}</span>
+        </div>
+
+        @if (progress?.phase === 'extracting') {
+          <p-progressBar
+            [value]="progressPercent"
+            [showValue]="false"
+            styleClass="h-2 rounded-full" />
+        }
+      </div>
+    }
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    @if (isIdle) {
+      <p-button label="Close" severity="secondary" (onClick)="close()" />
+      @if (progress?.phase !== 'done') {
+        <p-button label="Browse file" icon="pi pi-folder-open" (onClick)="openFilePicker()" />
+      }
+    } @else {
+      <p-button label="Cancel" severity="secondary" [disabled]="true" />
+    }
+  </ng-template>
+</p-dialog>

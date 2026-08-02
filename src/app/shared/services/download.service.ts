@@ -14,7 +14,7 @@ export type {ToonruntimePacketChapterReport};
 export type {ArchiverImageReport} from '@core/api/model/archiverImageReport';
 export type {ToonChapter};
 
-export type DownloadFormat = 'pdf' | 'cbz' | 'images';
+export type DownloadFormat = 'pdf' | 'cbz' | 'images' | 'offtoon';
 
 export type DownloadState =
   | 'idle'
@@ -291,7 +291,10 @@ export class DownloadService implements OnDestroy {
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = objectUrl;
-      a.download = `${this.slug || 'chapters'}.zip`;
+      // Prefer the server-provided filename (handles .offtoon vs .zip correctly).
+      const disposition = response.headers.get('Content-Disposition') ?? '';
+      const match = disposition.match(/filename="([^"]+)"/);
+      a.download = match?.[1] ?? `${this.slug || 'chapters'}.zip`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

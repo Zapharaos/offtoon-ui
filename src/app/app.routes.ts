@@ -9,6 +9,11 @@ export const routes: Routes = [
     path: '',
     loadChildren: () => import('./modules/docs/docs.routes').then(m => m.routes),
   },
+  // Library + reader: CSR-only routes, not included in SSG prerender.
+  {
+    path: 'library',
+    loadChildren: () => import('./modules/library/library.routes').then(m => m.routes),
+  },
   {
     path: '**',
     loadComponent: () => import('./modules/common/pages/not-found/not-found.component').then(m => m.NotFoundComponent)

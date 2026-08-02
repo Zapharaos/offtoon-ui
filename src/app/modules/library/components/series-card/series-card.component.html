@@ -1,0 +1,50 @@
+<article class="series-card" (click)="onCardClick()" (keydown.enter)="onCardClick()" tabindex="0" role="button" [attr.aria-label]="entry.title">
+
+  <!-- Cover -->
+  <div class="cover-wrap">
+    @if (coverLoading) {
+      <p-skeleton height="100%" styleClass="rounded-none" />
+    } @else if (coverUrl) {
+      <img [src]="coverUrl" [alt]="entry.title" class="cover-img" loading="lazy" />
+    } @else {
+      <div class="cover-placeholder flex items-center justify-center">
+        <i class="pi pi-book text-4xl opacity-30"></i>
+      </div>
+    }
+
+    <!-- Overlay badges -->
+    <div class="cover-overlay">
+      <p-tag [value]="statusLabel" [severity]="statusSeverity" styleClass="text-xs" />
+    </div>
+
+    <!-- Delete button -->
+    <button
+      class="delete-btn"
+      (click)="onDelete($event)"
+      [pTooltip]="'Remove from library'"
+      tooltipPosition="top"
+      aria-label="Delete series">
+      <i class="pi pi-trash"></i>
+    </button>
+  </div>
+
+  <!-- Info -->
+  <div class="card-info flex flex-col gap-1 p-2">
+    <h3 class="card-title" [pTooltip]="entry.title" tooltipPosition="top">{{ entry.title }}</h3>
+    <p class="card-author text-light">{{ entry.author }}</p>
+
+    <div class="flex items-center justify-between mt-1">
+      <span class="text-xs text-light">{{ successChapters }} ch.</span>
+      @if (entry.source) {
+        <span class="source-badge">{{ entry.source }}</span>
+      }
+    </div>
+
+    @if (isRead) {
+      <p class="read-indicator" [pTooltip]="'Last read: ' + readLabel" tooltipPosition="bottom">
+        <i class="pi pi-bookmark-fill text-xs mr-1"></i>{{ readLabel }}
+      </p>
+    }
+  </div>
+
+</article>

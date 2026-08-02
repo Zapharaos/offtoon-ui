@@ -1,0 +1,524 @@
+.library-page {
+  background: var(--ground-background);
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.library-header {
+  border-bottom: 1px solid var(--p-surface-800);
+}
+
+.series-count {
+  font-size: 0.75rem;
+  color: var(--text-secondary-color);
+  background: var(--p-surface-800);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+// ── Storage gauge ─────────────────────────────────────────────────────────────
+
+// Kept visible on phones on purpose: mobile is where the quota is tightest, so
+// hiding the gauge there removed it from exactly the users who needed it.
+.storage-pill {
+  position: relative;
+  width: 100px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--p-surface-800);
+  overflow: hidden;
+  cursor: default;
+
+  @media (max-width: 480px) { width: 68px; }
+}
+
+.storage-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: color-mix(in srgb, var(--p-primary-color) 40%, transparent);
+  transition: width 0.4s;
+}
+
+.storage-label {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 0.65rem;
+  color: var(--p-surface-200);
+}
+
+// ── Install hint ──────────────────────────────────────────────────────────────
+
+.install-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 16px;
+  margin: 0 1.5rem;
+  margin-top: 1rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--p-primary-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--p-primary-color) 30%, transparent);
+}
+
+.install-hint-icon {
+  color: var(--p-primary-color);
+  font-size: 0.95rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.install-hint-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.install-hint-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--p-text-color);
+}
+
+.install-hint-detail,
+.install-hint-steps {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--p-text-muted-color, rgba(255, 255, 255, .55));
+
+  .pi { font-size: .7rem; }
+  b { color: var(--p-text-color); font-weight: 600; }
+}
+
+.install-hint-action {
+  align-self: flex-start;
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: none;
+  border-radius: 6px;
+  background: var(--p-primary-color);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter .15s;
+
+  &:hover { filter: brightness(1.1); }
+  .pi { font-size: .75rem; }
+}
+
+.install-hint-close {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--p-text-muted-color, rgba(255, 255, 255, .5));
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+
+  &:hover { color: var(--p-text-color); }
+}
+
+// ── Filters ───────────────────────────────────────────────────────────────────
+
+.filters-bar {
+  border-bottom: 1px solid var(--p-surface-800);
+  // On very small screens, ensure the search input doesn't force overflow
+  .relative { min-width: 0; }
+
+  // The selects reserve ~300px of fixed width, which on a phone left the search
+  // field about two characters wide. Give it the full first row and let the
+  // selects share the next one.
+  @media (max-width: 640px) {
+    .search-field { flex: 0 0 100%; }
+
+    p-select { flex: 1 1 0; min-width: 0; }
+
+    ::ng-deep .p-select {
+      min-width: 0 !important;
+      width: 100%;
+    }
+  }
+}
+
+// ── Card grid ─────────────────────────────────────────────────────────────────
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+
+  @media (min-width: 640px)  { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  @media (min-width: 1024px) { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  @media (min-width: 1280px) { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+
+.empty-state {
+  min-height: 60vh;
+}
+
+// ── Detail dialog ─────────────────────────────────────────────────────────────
+
+::ng-deep .detail-dialog {
+  width: min(560px, 96vw) !important;
+
+  .p-dialog-header { padding: 1rem 1.25rem 0.75rem; }
+  .p-dialog-content { padding: 0; overflow: hidden; }
+  .p-dialog-footer { padding: 0.75rem 1.25rem; }
+
+  @media (max-width: 600px) {
+    width: 100vw !important;
+    max-height: 92dvh !important;
+    margin: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    top: auto !important;
+    left: 0 !important;
+    transform: none !important;
+  }
+}
+
+.detail-header {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-header-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--p-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.detail-body {
+  display: flex;
+  flex-direction: column;
+  max-height: 72dvh;
+  overflow: hidden;
+
+  @media (max-width: 600px) { max-height: 80dvh; }
+}
+
+// Hero: cover + meta
+.detail-hero {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
+  flex-shrink: 0;
+}
+
+.detail-cover {
+  position: relative;
+  flex-shrink: 0;
+  width: 100px;
+  aspect-ratio: 2/3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--p-surface-800);
+}
+
+// Mirrors .cover-overlay in series-card.component.scss.
+.detail-cover-overlay {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0.4rem;
+}
+
+.detail-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.detail-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--p-surface-500);
+}
+
+.detail-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.source-badge-lg {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--p-primary-color) 15%, transparent);
+  color: var(--p-primary-color);
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.detail-rating {
+  font-size: 0.8rem;
+  color: var(--p-text-muted-color, rgba(255,255,255,.5));
+}
+
+.detail-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.25rem;
+  background: var(--p-surface-800, rgba(255,255,255,.06));
+  color: var(--p-text-muted-color, rgba(255,255,255,.55));
+
+  .pi { font-size: .65rem; }
+}
+
+.detail-author {
+  font-size: 0.82rem;
+  color: var(--p-text-muted-color, rgba(255,255,255,.55));
+  strong { color: var(--p-primary-color); font-weight: 600; }
+}
+
+.detail-genres {
+  font-size: 0.75rem;
+  color: var(--p-text-muted-color, rgba(255,255,255,.45));
+  line-height: 1.4;
+}
+
+.detail-desc {
+  font-size: 0.78rem;
+  color: var(--p-text-muted-color, rgba(255,255,255,.5));
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+// Continue reading — same tinted-card treatment as .install-hint.
+.continue-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: calc(100% - 40px);
+  margin: 0 20px 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--p-primary-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--p-primary-color) 30%, transparent);
+  color: var(--p-text-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover {
+    background: color-mix(in srgb, var(--p-primary-color) 20%, transparent);
+    border-color: color-mix(in srgb, var(--p-primary-color) 45%, transparent);
+  }
+}
+
+.continue-btn-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  color: var(--p-primary-color);
+}
+
+.continue-btn-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.45;
+}
+
+.continue-btn-chapter {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--p-text-muted-color, rgba(255, 255, 255, .55));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.continue-btn .pi-chevron-right {
+  flex-shrink: 0;
+  font-size: .75rem;
+  color: var(--p-text-muted-color, rgba(255, 255, 255, .45));
+}
+
+// Chapter section
+.detail-chapters {
+  flex: 1;
+  overflow-y: auto;
+  border-top: 1px solid var(--p-surface-700, rgba(255,255,255,.08));
+  padding: 8px 0 4px;
+}
+
+.detail-chapters-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--p-text-muted-color, rgba(255,255,255,.35));
+  padding: 0 20px 6px;
+}
+
+// ── Chapter rows ──────────────────────────────────────────────────────────────
+
+// Each row sits on top of a delete action that a leftward swipe uncovers.
+.chapter-swipe {
+  position: relative;
+  overflow: hidden;
+}
+
+// Parked off the right edge (clipped by .chapter-swipe) and slid into view by
+// the swipe. It sits above the row, so the row's own content stays where it is.
+.chapter-delete-action {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 2;
+  width: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: none;
+  background: #dc2626;
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .2s ease;
+
+  .pi { font-size: .85rem; }
+}
+
+// Desktop affordance: pointer devices get a hover button instead of a swipe.
+.chapter-delete-hover {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  border: none;
+  border-radius: 6px;
+  background: color-mix(in srgb, #000 55%, transparent);
+  color: var(--p-surface-300);
+  padding: .3rem .4rem;
+  cursor: pointer;
+  transition: opacity .15s, color .15s;
+
+  &:hover { color: #f87171; }
+}
+
+@media (hover: hover) {
+  .chapter-swipe:hover .chapter-delete-hover {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  // Keep the tags clear of the delete button while it is showing.
+  .chapter-swipe:hover .chapter-row-right { margin-right: 32px; }
+}
+
+// Swipe is a touch affordance; hide the action entirely on pointer devices so it
+// can never peek out from under the row.
+@media (hover: hover) {
+  .chapter-delete-action { display: none; }
+}
+
+.chapter-row {
+  position: relative;
+  z-index: 1;
+  transition: background .1s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 20px;
+  border: none;
+  background: var(--p-surface-900, #18181b);
+  color: var(--p-text-color);
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.875rem;
+  gap: 12px;
+
+  // These backgrounds must stay fully opaque: the delete action sits underneath
+  // the row, so any transparency lets red bleed through on an untouched row.
+  &:hover:not(:disabled) { background: var(--p-surface-800, #27272a); }
+  &.last-read { background: color-mix(in srgb, var(--p-primary-color) 10%, var(--p-surface-900, #18181b)); }
+  &:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  // Finished chapters recede so the eye lands on what is left to read.
+  &.chapter-read:not(.last-read) .chapter-title {
+    color: var(--p-text-muted-color, rgba(255, 255, 255, .45));
+  }
+}
+
+.chapter-read-icon {
+  font-size: .75rem;
+  color: var(--p-text-muted-color, rgba(255, 255, 255, .4));
+}
+
+.chapter-progress {
+  font-size: .68rem;
+  font-weight: 600;
+  padding: .1rem .4rem;
+  border-radius: 999px;
+  color: var(--p-primary-color);
+  background: color-mix(in srgb, var(--p-primary-color) 14%, transparent);
+}
+
+.detail-read-count {
+  color: var(--p-primary-color);
+  font-weight: 600;
+}
+
+.chapter-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chapter-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}

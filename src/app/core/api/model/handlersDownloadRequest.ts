@@ -9,14 +9,27 @@
  */
 import { ApiSource } from './apiSource';
 
+/** Series-level metadata written into manifest.json of a .offtoon archive. */
+export interface ArchiverToonMeta {
+    title?: string;
+    author?: string;
+    artist?: string;
+    description?: string;
+    status?: string;
+    genres?: string[];
+    rating?: number;
+    source?: string;
+    source_url?: string;
+    cover_url?: string;
+}
 
-export interface HandlersDownloadRequest { 
+export interface HandlersDownloadRequest {
     /**
      * ChapterIDs is the list of chapter IDs to download. Must contain at least one entry.
      */
     chapter_ids?: Array<string>;
     /**
-     * Format controls the per-chapter output format. Accepted values: \"pdf\" (default), \"cbz\", \"images\".
+     * Format controls the per-chapter output format. Accepted values: \"pdf\" (default), \"cbz\", \"images\", \"offtoon\".
      */
     format?: string;
     /**
@@ -27,6 +40,11 @@ export interface HandlersDownloadRequest {
      * Source is the API client to use (e.g. \"asura\").
      */
     source?: ApiSource;
+    /**
+     * Meta carries optional series metadata written into manifest.json.
+     * Only used when format is \"offtoon\"; ignored otherwise.
+     */
+    meta?: ArchiverToonMeta;
 }
 export namespace HandlersDownloadRequest {
 }

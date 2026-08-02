@@ -1,4 +1,5 @@
-import {ApplicationConfig, LOCALE_ID, provideZoneChangeDetection} from '@angular/core';
+import {ApplicationConfig, isDevMode, LOCALE_ID, provideZoneChangeDetection} from '@angular/core';
+import {provideServiceWorker} from '@angular/service-worker';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
@@ -64,5 +65,9 @@ export const appConfig: ApplicationConfig = {
     },
     MessageService,
     ConfirmationService,
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ]
 };

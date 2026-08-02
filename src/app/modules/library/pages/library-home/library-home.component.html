@@ -1,0 +1,341 @@
+<div class="library-page flex flex-col h-dvh overflow-hidden">
+
+  <p-toast position="bottom-right" />
+  <p-confirmDialog />
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header class="library-header flex items-center justify-between px-6 py-3 shrink-0">
+    <div class="flex items-center gap-3">
+      <i class="pi pi-book text-primary text-xl"></i>
+      <h1 class="text-xl font-bold">My Library</h1>
+      <span class="series-count">{{ displayed.length }} series</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <!-- Storage gauge -->
+      @if (storage_.quota > 0) {
+        <div class="storage-pill" [pTooltip]="storage_.usedLabel + ' / ' + storage_.quotaLabel" tooltipPosition="bottom">
+          <div class="storage-bar" [style.width.%]="storage_.percent"></div>
+          <span class="storage-label">{{ storage_.usedLabel }}</span>
+        </div>
+      }
+
+      <p-button
+        label="Import"
+        icon="pi pi-plus"
+        size="small"
+        (onClick)="showImport = true" />
+    </div>
+  </header>
+
+  <!-- ── Storage eviction warning ────────────────────────────────────────── -->
+  @if (showInstallHint) {
+    <div class="install-hint shrink-0 mt-5">
+      <i class="pi pi-info-circle install-hint-icon"></i>
+
+      <div class="install-hint-body">
+        <p class="install-hint-title">Install Offtoon to keep your library</p>
+
+        <p class="install-hint-detail">
+          @switch (installPlatform) {
+            @case ('ios') {
+              Safari deletes offline data from sites you haven't opened in about a week. Installed apps are exempt.
+            }
+            @case ('android') {
+              Chrome may clear downloaded chapters when storage runs low. Installing keeps them.
+            }
+            @default {
+              Your browser may clear downloaded chapters when storage runs low. Installing keeps them.
+            }
+          }
+        </p>
+
+        <!-- Chromium gives us a real prompt; everywhere else we can only explain -->
+        @if (canInstallDirectly) {
+          <button class="install-hint-action" (click)="install()">
+            <i class="pi pi-download"></i> Install
+          </button>
+        } @else {
+          <p class="install-hint-steps">
+            @switch (installPlatform) {
+              @case ('ios') {
+                Tap <i class="pi pi-upload"></i> <b>Share</b>, then <b>Add to Home Screen</b>.
+              }
+              @case ('android') {
+                Open the <i class="pi pi-ellipsis-v"></i> browser menu, then <b>Install app</b>.
+              }
+              @default {
+                Use the install icon in the address bar, or the browser menu → <b>Install Offtoon</b>.
+              }
+            }
+          </p>
+        }
+      </div>
+
+      <button class="install-hint-close" (click)="dismissInstallHint()" title="Dismiss">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+  }
+
+  <!-- ── Filters ─────────────────────────────────────────────────────────── -->
+  <div class="filters-bar flex flex-wrap items-center gap-2 px-6 py-3 shrink-0">
+
+    <!-- Search -->
+    <div class="search-field relative flex-1 min-w-0 sm:min-w-48">
+      <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 text-sm"></i>
+      <input
+        pInputText
+        [(ngModel)]="search"
+        (ngModelChange)="applyFilters()"
+        placeholder="Search title or author…"
+        class="pl-8 w-full text-sm h-9" />
+      @if (search) {
+        <button class="absolute right-2 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-200" (click)="clearSearch()">
+          <i class="pi pi-times text-xs"></i>
+        </button>
+      }
+    </div>
+
+    <!-- Status filter -->
+    <p-select
+      [options]="statusOptions"
+      [(ngModel)]="selectedStatus"
+      (ngModelChange)="applyFilters()"
+      optionLabel="label"
+      optionValue="value"
+      styleClass="text-sm h-9 min-w-36" />
+
+    <!-- Source filter (only shown if multiple sources) -->
+    @if (availableSources.length > 1) {
+      <p-select
+        [options]="sourceOptions"
+        [(ngModel)]="selectedSource"
+        (ngModelChange)="applyFilters()"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="text-sm h-9 min-w-32" />
+    }
+
+    <!-- Sort -->
+    <p-select
+      [options]="sortOptions"
+      [(ngModel)]="selectedSort"
+      (ngModelChange)="applyFilters()"
+      optionLabel="label"
+      optionValue="value"
+      styleClass="text-sm h-9 min-w-40" />
+  </div>
+
+  <!-- ── Grid ────────────────────────────────────────────────────────────── -->
+  <main class="flex-1 overflow-y-auto px-6 pb-6">
+
+    @if (loading) {
+      <!-- Skeleton -->
+      <div class="card-grid">
+        @for (n of [1,2,3,4,5,6,8,9,10,11,12]; track n) {
+          <div class="flex flex-col gap-2">
+            <p-skeleton height="220px" />
+            <p-skeleton height="1rem" width="80%" />
+            <p-skeleton height="0.75rem" width="50%" />
+          </div>
+        }
+      </div>
+
+    } @else if (displayed.length === 0 && allEntries.length === 0) {
+      <!-- Empty state -->
+      <div class="empty-state flex flex-col items-center justify-center gap-4 h-full"
+           (dragover)="$event.preventDefault()"
+           (drop)="showImport = true">
+        <i class="pi pi-inbox text-6xl opacity-20"></i>
+        <p class="text-light text-center">
+          Your library is empty.<br>Import a <code class="text-primary">.offtoon</code> file to get started.
+        </p>
+        <p-button label="Import file" icon="pi pi-plus" (onClick)="showImport = true" />
+      </div>
+
+    } @else if (displayed.length === 0) {
+      <!-- No results -->
+      <div class="empty-state flex flex-col items-center justify-center gap-3 h-full">
+        <i class="pi pi-search text-4xl opacity-20"></i>
+        <p class="text-light">No series match your filters.</p>
+        <p-button label="Clear filters" severity="secondary" size="small"
+                  (onClick)="search = ''; selectedStatus = 'all'; selectedSource = ''; applyFilters()" />
+      </div>
+
+    } @else {
+      <!-- Cards -->
+      <div class="card-grid">
+        @for (entry of displayed; track entry.id) {
+          <app-series-card
+            [entry]="entry"
+            (open)="openDetail($event)"
+            (delete)="confirmDelete($event)" />
+        }
+      </div>
+    }
+
+  </main>
+
+</div>
+
+<!-- ── Import dialog ────────────────────────────────────────────────────── -->
+<app-import-zone
+  [(visible)]="showImport"
+  (imported)="onImported($event)" />
+
+<!-- ── Series detail dialog ─────────────────────────────────────────────── -->
+<p-dialog
+  [(visible)]="showDetail"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="detail-dialog">
+
+  <ng-template pTemplate="header">
+    @if (selectedEntry) {
+      <div class="detail-header">
+        <span class="detail-header-title">{{ selectedEntry.title }}</span>
+      </div>
+    }
+  </ng-template>
+
+  @if (selectedEntry) {
+    <div class="detail-body">
+
+      <!-- Hero: cover + meta -->
+      <div class="detail-hero">
+        <div class="detail-cover">
+          @if (detailCoverUrl) {
+            <img [src]="detailCoverUrl" [alt]="selectedEntry.title" class="detail-cover-img" />
+          } @else {
+            <div class="detail-cover-placeholder"><i class="pi pi-book"></i></div>
+          }
+
+          <!-- Same tag, same placement as .cover-overlay on the library cards -->
+          <div class="detail-cover-overlay">
+            <p-tag [value]="statusLabel" [severity]="statusSeverity" styleClass="text-xs" />
+          </div>
+        </div>
+
+        <div class="detail-meta">
+          @if (selectedEntry.author) {
+            <p class="detail-author">By <strong>{{ selectedEntry.author }}</strong></p>
+          }
+          <div class="detail-facts">
+            @if (selectedEntry.source) {
+              <span class="source-badge-lg">{{ selectedEntry.source }}</span>
+            }
+            @if (selectedEntry.rating) {
+              <span class="detail-rating">★ {{ selectedEntry.rating | number:'1.1-1' }}</span>
+            }
+            @if (selectedEntry.sizeBytes) {
+              <span class="detail-size" pTooltip="Space used on this device">
+                <i class="pi pi-database"></i> {{ formatBytes(selectedEntry.sizeBytes) }}
+              </span>
+            }
+          </div>
+          @if (selectedEntry.genres?.length) {
+            <p class="detail-genres">{{ selectedEntry.genres!.join(' · ') }}</p>
+          }
+          @if (selectedEntry.description) {
+            <p class="detail-desc">{{ selectedEntry.description }}</p>
+          }
+        </div>
+      </div>
+
+      <!-- Continue reading -->
+      @if (resumeChapter; as resume) {
+        <button class="continue-btn" (click)="continueReading()">
+          <i class="pi pi-play-circle continue-btn-icon"></i>
+          <span class="continue-btn-text">
+            Continue reading
+            <span class="continue-btn-chapter">{{ resume.title }}</span>
+          </span>
+          <i class="pi pi-chevron-right"></i>
+        </button>
+      }
+
+      <!-- Chapter list -->
+      <div class="detail-chapters">
+        <p class="detail-chapters-label">
+          {{ selectedEntry.chapters.length }} chapters
+          @if (readChapterCount) {
+            <span class="detail-read-count">· {{ readChapterCount }} read</span>
+          }
+        </p>
+        @for (ch of detailChapters; track ch.id) {
+          <div
+            class="chapter-swipe"
+            [class.swiped]="swipedChapterId === ch.id"
+            (touchstart)="onSwipeStart($event, ch.id)"
+            (touchmove)="onSwipeMove($event, ch.id)"
+            (touchend)="onSwipeEnd(ch.id)">
+
+            <!-- Slides in from the right as the row is swiped (mobile). The row
+                 itself stays put so the chapter title never slides out of view. -->
+            <button
+              class="chapter-delete-action"
+              [style.transform]="'translateX(' + (swipeActionWidth + rowOffset(ch.id)) + 'px)'"
+              (click)="confirmDeleteChapter(ch)"
+              aria-label="Delete chapter">
+              <i class="pi pi-trash"></i>
+              <span>Delete</span>
+            </button>
+
+            <!-- Shown on hover (desktop, where there is no swipe) -->
+            <button class="chapter-delete-hover" (click)="confirmDeleteChapter(ch)"
+                    pTooltip="Delete chapter" tooltipPosition="left" aria-label="Delete chapter">
+              <i class="pi pi-trash"></i>
+            </button>
+
+            <button
+              class="chapter-row"
+              [class.last-read]="isLastRead(ch)"
+              [class.chapter-read]="chapterState(ch) === 'read'"
+              [disabled]="ch.status === 'failed'"
+              (click)="onChapterClick(ch)">
+              <span class="chapter-title">{{ ch.title }}</span>
+              <span class="chapter-row-right">
+                <!-- Reading state: finished chapters fade out, a partially read one
+                     shows how far the user got, and the bookmark flags where to resume. -->
+                @if (chapterState(ch) === 'read') {
+                  <i class="pi pi-check chapter-read-icon" pTooltip="Read"></i>
+                } @else if (chapterState(ch) === 'reading') {
+                  <span class="chapter-progress" pTooltip="In progress">{{ chapterPercent(ch) }}%</span>
+                }
+                @if (isLastRead(ch)) {
+                  <i class="pi pi-bookmark-fill text-primary" pTooltip="Continue here"></i>
+                }
+                <!-- Page count is only worth showing when something is wrong with
+                     the chapter — on a complete one it is just noise. -->
+                @if (ch.status === 'incomplete') {
+                  <p-tag
+                    severity="warn"
+                    [value]="ch.pages + ' p'"
+                    styleClass="text-xs"
+                    pTooltip="Some pages are missing from this chapter" />
+                } @else if (ch.status === 'failed') {
+                  <p-tag severity="danger" value="Failed" styleClass="text-xs" />
+                }
+              </span>
+            </button>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+  <ng-template pTemplate="footer">
+    @if (selectedEntry) {
+      <p-button
+        label="Delete"
+        icon="pi pi-trash"
+        severity="danger"
+        [outlined]="true"
+        (onClick)="confirmDelete(selectedEntry); showDetail = false" />
+    }
+    <p-button label="Close" severity="secondary" (onClick)="showDetail = false" />
+  </ng-template>
+</p-dialog>

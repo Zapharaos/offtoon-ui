@@ -96,7 +96,8 @@
       "label": "Output format",
       "pdf-desc": "Best for phones and universal readers.",
       "cbz-desc": "For comic reader apps (Panels, Chunky, etc.).",
-      "images-desc": "Loose WebP files in folders inside the ZIP."
+      "images-desc": "Loose WebP files in folders inside the ZIP.",
+      "offtoon-desc": "Import directly into the Offtoon offline library."
     },
     "progress": {
       "fetching-chapters": "Fetching chapter list…",

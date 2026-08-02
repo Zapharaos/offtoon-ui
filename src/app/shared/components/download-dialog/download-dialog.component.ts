@@ -3,6 +3,8 @@ import {Subscription} from 'rxjs';
 import {ToonService} from '@core/api/api/toon.service';
 import {ApiSource} from '@core/api/model/apiSource';
 import {ToonChapter} from '@core/api/model/toonChapter';
+import {ToonToon} from '@core/api/model/toonToon';
+import {ArchiverToonMeta} from '@core/api/model/handlersDownloadRequest';
 import {NotificationUtilsService} from '@shared/services/notification-utils.service';
 import {DownloadFormat, DownloadProgress, DownloadService, WsPacketChapterReport} from '@shared/services/download.service';
 import {AnalyticsService} from '@core/services/analytics.service';
@@ -44,6 +46,8 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
   @Input() source!: ApiSource;
   @Input() slug!: string;
   @Input() chapters: ToonChapter[] = [];
+  /** Full toon object — used to populate manifest.json when format is offtoon. */
+  @Input() toon: ToonToon | null = null;
 
   @Output() visibleChange = new EventEmitter<boolean>();
 
@@ -59,9 +63,10 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
   selectedFormat: DownloadFormat = 'pdf';
 
   formatOptions: FormatOption[] = [
-    {label: 'PDF', value: 'pdf', description: 'download.format.pdf-desc'},
-    {label: 'CBZ', value: 'cbz', description: 'download.format.cbz-desc'},
-    {label: 'Images', value: 'images', description: 'download.format.images-desc'},
+    {label: 'PDF',     value: 'pdf',     description: 'download.format.pdf-desc'},
+    {label: 'CBZ',     value: 'cbz',     description: 'download.format.cbz-desc'},
+    {label: 'Images',  value: 'images',  description: 'download.format.images-desc'},
+    {label: 'Offtoon', value: 'offtoon', description: 'download.format.offtoon-desc'},
   ];
 
   get state() {
@@ -177,11 +182,27 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
     // before the POST response arrives and connectAndTrack() is called.
     this.downloadService.reset();
 
+    const meta: ArchiverToonMeta | undefined = this.selectedFormat === 'offtoon' && this.toon
+      ? {
+          title:       this.toon.title,
+          author:      this.toon.author,
+          artist:      this.toon.artist,
+          description: this.toon.description,
+          status:      this.toon.status,
+          genres:      this.toon.genres,
+          rating:      this.toon.rating,
+          source:      this.toon.source,
+          source_url:  this.toon.source_url,
+          cover_url:   this.toon.cover_url,
+        }
+      : undefined;
+
     this.toonService.apiV1DownloadPost({
       source: this.source,
       slug: this.slug,
       chapter_ids: chapterIds,
       format: this.selectedFormat,
+      meta,
     }).subscribe({
       next: (res) => {
         const runtimeId = res.runtime_id;

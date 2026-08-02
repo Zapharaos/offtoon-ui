@@ -10,5 +10,13 @@
   "icons": [
     { "src": "/assets/img/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
     { "src": "/assets/img/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" }
+  ],
+  "file_handlers": [
+    {
+      "action": "/library",
+      "accept": {
+        "application/octet-stream": [".offtoon"]
+      }
+    }
   ]
 }

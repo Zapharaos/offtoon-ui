@@ -25,6 +25,42 @@ header .logo {
   font-size: 1.25rem;
 }
 
+// Nav links
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, .8);
+  text-decoration: none;
+  font-size: .875rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  border: 1.5px solid rgba(255, 255, 255, .18);
+  background: rgba(255, 255, 255, .08);
+  transition: background .15s, border-color .15s, color .15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, .16);
+    border-color: rgba(255, 255, 255, .32);
+    color: #fff;
+  }
+
+  &.nav-link-active {
+    background: #fff;
+    border-color: transparent;
+    color: var(--p-primary-700);
+  }
+
+  .pi { font-size: .85rem; }
+}
+
+@media (max-width: 480px) {
+  .nav-link-label { display: none; }
+  .nav-link { padding: 7px 11px; }
+}
+
 // Content
 header + div {
   margin-top: var(--header-height);

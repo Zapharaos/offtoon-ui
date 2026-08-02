@@ -3,6 +3,7 @@ import {ButtonModule} from "primeng/button";
 import {TranslateModule} from "@ngx-translate/core";
 import {FormsModule} from "@angular/forms";
 import {NgOptimizedImage} from '@angular/common';
+import {RouterLink, RouterLinkActive} from '@angular/router';
 import {FooterComponent} from '@shared/components/footer/footer.component';
 
 @Component({
@@ -13,6 +14,8 @@ import {FooterComponent} from '@shared/components/footer/footer.component';
     TranslateModule,
     FormsModule,
     NgOptimizedImage,
+    RouterLink,
+    RouterLinkActive,
     FooterComponent,
   ],
     templateUrl: './basic-layout.component.html',

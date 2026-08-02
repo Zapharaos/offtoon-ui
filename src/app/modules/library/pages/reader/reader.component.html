@@ -1,0 +1,192 @@
+<div class="reader-shell"
+     (click)="toggleHud()">
+
+  <!-- ── HUD ──────────────────────────────────────────────────────────────── -->
+  <div class="reader-hud" [class.hud-hidden]="!hudVisible" (click)="$event.stopPropagation()">
+    <div class="hud-inner">
+
+      <button class="hud-btn" (click)="goBack()" title="Back to library">
+        <i class="pi pi-arrow-left"></i>
+      </button>
+
+      <div class="hud-titles">
+        <span class="hud-series">{{ series?.title }}</span>
+        <span class="hud-chapter">{{ chapter?.title }}</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Loading ───────────────────────────────────────────────────────────── -->
+  @if (loading) {
+    <div class="reader-center">
+      <div class="reader-spinner"></div>
+      <p class="reader-state-label">Loading chapter…</p>
+    </div>
+  }
+
+  <!-- ── Error ─────────────────────────────────────────────────────────────── -->
+  @else if (error) {
+    <div class="reader-center">
+      <i class="pi pi-exclamation-triangle reader-error-icon"></i>
+      <p class="reader-state-label error">{{ error }}</p>
+      <button class="footer-library-btn mt-4" (click)="goBack()">
+        <i class="pi pi-arrow-left"></i> Back to library
+      </button>
+    </div>
+  }
+
+  <!-- ── Pages ─────────────────────────────────────────────────────────────── -->
+  @else {
+    <div class="reader-scroll">
+      <div class="reader-content">
+
+        @for (url of imageUrls; track trackByIdx($index); let i = $index) {
+          <img
+            class="reader-page"
+            [attr.data-page]="i"
+            [src]="url"
+            loading="lazy"
+            decoding="async"
+            draggable="false"
+            [alt]="'Page ' + (i + 1)" />
+        }
+
+        <!-- ── End-of-chapter footer ────────────────────────────────────── -->
+        <div class="reader-footer" (click)="$event.stopPropagation()">
+
+          <!-- Prev / Next buttons -->
+          <div class="footer-nav-row">
+            <button
+              class="footer-nav-btn"
+              [disabled]="!prevChapter"
+              (click)="prevChapter && navigateChapter(prevChapter)">
+              <i class="pi pi-chevron-left"></i>
+              <span>Prev</span>
+            </button>
+
+            <button
+              class="footer-nav-btn"
+              [disabled]="!nextChapter"
+              (click)="nextChapter && navigateChapter(nextChapter)">
+              <span>Next</span>
+              <i class="pi pi-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Info card -->
+          <div class="footer-card">
+
+            <!-- Cover -->
+            <div class="footer-cover">
+              @if (coverUrl) {
+                <img [src]="coverUrl" [alt]="series?.title" class="footer-cover-img" />
+              } @else {
+                <div class="footer-cover-placeholder"><i class="pi pi-book"></i></div>
+              }
+            </div>
+
+            <!-- Info + controls -->
+            <div class="footer-info">
+
+              <!-- Top row: status label + chapter select -->
+              <div class="footer-top-row">
+                <div class="footer-status">
+                  @if (isLastChapter) {
+                    <i class="pi pi-check-circle text-green-400"></i>
+                    <span class="text-green-400">You're all caught up!</span>
+                  } @else {
+                    <span>Chapter {{ chapterPosition }}</span>
+                  }
+                </div>
+
+                <p-select
+                  [options]="chapterOptions"
+                  optionLabel="title"
+                  optionValue="id"
+                  [(ngModel)]="selectedChapterId"
+                  (onChange)="onChapterSelectChange($event.value)"
+                  (onShow)="onSelectShow()"
+                  (onHide)="onSelectHide()"
+                  placeholder="Go to…"
+                  styleClass="footer-chapter-select"
+                  [filter]="sortedChapters.length > 10"
+                  filterPlaceholder="Search…"
+                  appendTo="body" />
+              </div>
+
+              <p class="footer-series-title">{{ series?.title }}</p>
+              <p class="footer-chapter-label">{{ chapter?.title }}</p>
+
+              <button class="footer-library-btn mt-4" (click)="goBack()">
+                <i class="pi pi-arrow-left"></i>
+                Back to library
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Bottom bar ───────────────────────────────────────────────────────── -->
+    <div class="reader-bottom-bar" [class.hud-hidden]="!hudVisible" (click)="$event.stopPropagation()">
+      <!-- Inner wrapper mirrors .hud-inner: the gradient spans the viewport while
+           the controls stay centred on the same 960px column as the header. -->
+      <div class="rbb-inner">
+        <button
+          class="rbb-nav-btn"
+          [disabled]="!prevChapter"
+          (click)="prevChapter && navigateChapter(prevChapter)">
+          <i class="pi pi-chevron-left"></i>
+          <span>Prev</span>
+        </button>
+
+        <p-select
+          [options]="chapterOptions"
+          optionLabel="title"
+          optionValue="id"
+          [(ngModel)]="selectedChapterId"
+          (onChange)="onChapterSelectChange($event.value)"
+          (onShow)="onSelectShow()"
+          (onHide)="onSelectHide()"
+          placeholder="Chapter…"
+          styleClass="rbb-chapter-select"
+          [filter]="sortedChapters.length > 10"
+          filterPlaceholder="Search…"
+          appendTo="body" />
+
+        <button
+          class="rbb-nav-btn"
+          [disabled]="!nextChapter"
+          (click)="nextChapter && navigateChapter(nextChapter)">
+          <span>Next</span>
+          <i class="pi pi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Resume prompt -->
+    @if (showResumePrompt) {
+      <div class="resume-prompt" (click)="$event.stopPropagation(); scrollToSaved()">
+        <i class="pi pi-bookmark"></i>
+        <span>Resume where you left off</span>
+        <button class="resume-dismiss" (click)="$event.stopPropagation(); dismissResume()" title="Dismiss">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+    }
+
+    <!-- Scroll-to-top floating button -->
+    @if (showScrollTop) {
+      <button
+        class="scroll-top-btn"
+        (click)="$event.stopPropagation(); scrollToTop()"
+        title="Back to top">
+        <i class="pi pi-arrow-up"></i>
+      </button>
+    }
+  }
+
+</div>

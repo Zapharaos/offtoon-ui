@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
-  "index": "/index.html",
+  "index": "/index.csr.html",
   "assetGroups": [
     {
       "name": "app-shell",
@@ -9,10 +9,13 @@
       "resources": {
         "files": [
           "/favicon.ico",
-          "/index.html",
+          "/index.csr.html",
           "/site.webmanifest",
           "/*.css",
-          "/*.js"
+          "/*.js",
+          "/media/**",
+          "/assets/i18n/*.json",
+          "/assets/img/icon-*.png"
         ]
       }
     },

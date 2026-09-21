@@ -22,7 +22,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.translateService.get('primeng').subscribe(res => this.config.setTranslation(res));
+    // Hors-ligne, le JSON de traduction peut manquer du cache : une erreur non
+    // geree ici interromprait le reste du bootstrap (SEO, analytics) et laisserait
+    // une page vide. On degrade silencieusement vers les libelles par defaut.
+    this.translateService.get('primeng').subscribe({
+      next: res => this.config.setTranslation(res),
+      error: () => {},
+    });
 
     // Set initial translation language based on current locale config
     const translationFile = this.localeService.getTranslationFile();

@@ -67,7 +67,13 @@ export const appConfig: ApplicationConfig = {
     ConfirmationService,
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000',
+      // L'app doit fonctionner hors-ligne des la premiere visite : sur iOS une
+      // web app ajoutee a l'ecran d'accueil possede son propre conteneur de
+      // stockage, donc son SW doit s'installer pendant sa toute premiere
+      // ouverture en ligne, qui peut durer moins de quelques secondes.
+      // `registerWhenStable:30000` reportait l'enregistrement et laissait
+      // l'app sans cache (ecran blanc au lancement suivant en mode avion).
+      registrationStrategy: 'registerImmediately',
     }),
   ]
 };

@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy, inject} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {environment} from '@environments/environment';
 import {ToonruntimePacketChapterReport} from '@core/api/model/toonruntimePacketChapterReport';
@@ -9,6 +9,7 @@ import {ToonruntimePacketFatal} from '@core/api/model/toonruntimePacketFatal';
 import {ToonruntimePacketArchiving} from '@core/api/model/toonruntimePacketArchiving';
 import {ToonruntimePacketZipping} from '@core/api/model/toonruntimePacketZipping';
 import {ToonChapter} from '@core/api/model/toonChapter';
+import {WakeLockService} from '@core/services/wake-lock.service';
 
 export type {ToonruntimePacketChapterReport};
 export type {ArchiverImageReport} from '@core/api/model/archiverImageReport';
@@ -74,6 +75,13 @@ export interface DownloadProgress {
 
 @Injectable({providedIn: 'root'})
 export class DownloadService implements OnDestroy {
+  /**
+   * Held for as long as a download is running: an archive build can go minutes
+   * without any user input, which is long enough for the device to fall asleep
+   * and cut the WebSocket.
+   */
+  private readonly wakeLock = inject(WakeLockService);
+
   private ws: WebSocket | null = null;
   private timeoutHandle: ReturnType<typeof setTimeout> | null = null;
   private retryHandle: ReturnType<typeof setTimeout> | null = null;
@@ -102,6 +110,7 @@ export class DownloadService implements OnDestroy {
 
   reset(): void {
     console.log(`[DownloadService] reset()`);
+    this.wakeLock.release();
     this.clearRetry();
     this.closeWs();
     this.currentProgress = this.defaultProgress();
@@ -112,6 +121,7 @@ export class DownloadService implements OnDestroy {
     console.log(`[DownloadService] connectAndTrack() - runtimeId=${runtimeId}`);
     this.slug = slug;
     this.closeWs();
+    this.wakeLock.acquire();
 
     this.currentProgress = {
       ...this.defaultProgress(),
@@ -240,6 +250,7 @@ export class DownloadService implements OnDestroy {
       case 'fatal':
         console.error(`[DownloadService] ← fatal | step=${packet.step} message="${packet.message}"`);
         this.closeWs();
+        this.wakeLock.release();
         this.currentProgress = {
           ...this.currentProgress,
           state: 'error',
@@ -250,14 +261,23 @@ export class DownloadService implements OnDestroy {
         this.emit();
         break;
 
-      case 'chapter_report':
+      case 'chapter_report': {
         console.log(`[DownloadService] ← chapter_report | chapter="${packet.chapter}" status=${packet.status}`);
+        // A report proves the backend is working, so it has to move the view on
+        // even when the chapter it reports failed. Progress packets only arrive
+        // once a page has actually been downloaded, so a run whose first
+        // chapters all fail to resolve produced nothing but reports and the
+        // view sat on "connecting" looking frozen for its whole duration.
+        const stillWaiting = this.currentProgress.state === 'pending' ||
+                             this.currentProgress.state === 'connecting';
         this.currentProgress = {
           ...this.currentProgress,
+          state: stillWaiting ? 'downloading' : this.currentProgress.state,
           chapterReports: [...this.currentProgress.chapterReports, packet],
         };
         this.emit();
         break;
+      }
 
       case 'zipping':
         // Sent after every chapter has been built, right before the outer ZIP is
@@ -302,6 +322,7 @@ export class DownloadService implements OnDestroy {
 
       console.log(`[DownloadService] Archive offered to browser (${(blob.size / 1024 / 1024).toFixed(2)} MB) - closing WS`);
       this.closeWs();
+      this.wakeLock.release();
       this.currentProgress = {
         ...this.currentProgress,
         state: 'completed',
@@ -327,6 +348,7 @@ export class DownloadService implements OnDestroy {
   private setError(fatalStep: number | null, fatalMessage: string | null, errorMessage: string): void {
     console.error(`[DownloadService] setError: ${errorMessage}`);
     this.closeWs();
+    this.wakeLock.release();
     this.currentProgress = {
       ...this.currentProgress,
       state: 'error',
@@ -375,6 +397,7 @@ export class DownloadService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.wakeLock.release();
     this.clearRetry();
     this.closeWs();
     this.progress$.complete();

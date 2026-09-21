@@ -91,8 +91,9 @@ export class ToonComponent implements OnInit {
 
   sourceLabel(source: ToonSource | string | undefined): string {
     switch (source) {
-      case ToonSource.SourceAsura: return 'Asura';
-      default:                     return source ?? '';
+      case ToonSource.SourceAsura:    return 'Asura';
+      case ToonSource.SourceWebtoons: return 'Webtoons';
+      default:                        return source ?? '';
     }
   }
 

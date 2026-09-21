@@ -11,7 +11,9 @@
 
 export const ToonSource = {
     SourceAsura: 'asura',
-    Asura2: 'asura'
+    SourceWebtoons: 'webtoons',
+    Asura2: 'asura',
+    Webtoons2: 'webtoons'
 } as const;
 export type ToonSource = typeof ToonSource[keyof typeof ToonSource];
 

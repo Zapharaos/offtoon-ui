@@ -37,7 +37,7 @@ export interface HandlersDownloadRequest {
      */
     slug?: string;
     /**
-     * Source is the API client to use (e.g. \"asura\").
+     * Source is the API client to use (e.g. \"asura\", \"webtoons\").
      */
     source?: ApiSource;
     /**

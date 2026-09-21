@@ -16,7 +16,7 @@ export interface HandlersSearchRequest {
      */
     input?: string;
     /**
-     * Sources is the list of API clients to query. Valid values: \"asura\". Must contain at least one entry.
+     * Sources is the list of API clients to query. Valid values: \"asura\", \"webtoons\". Must contain at least one entry.
      */
     sources?: Array<ApiSource>;
 }

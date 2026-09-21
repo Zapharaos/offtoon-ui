@@ -11,7 +11,9 @@
 
 export const ApiSource = {
     SourceAsura: 'asura',
-    Asura2: 'asura'
+    SourceWebtoons: 'webtoons',
+    Asura2: 'asura',
+    Webtoons2: 'webtoons'
 } as const;
 export type ApiSource = typeof ApiSource[keyof typeof ApiSource];
 

@@ -182,7 +182,10 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
     // before the POST response arrives and connectAndTrack() is called.
     this.downloadService.reset();
 
-    const meta: ArchiverToonMeta | undefined = this.selectedFormat === 'offtoon' && this.toon
+    // Sent for every format, not just .offtoon: the backend names the archive
+    // and the folder inside it from meta.title, so without this the user gets
+    // the source's internal id as a file name.
+    const meta: ArchiverToonMeta | undefined = this.toon
       ? {
           title:       this.toon.title,
           author:      this.toon.author,

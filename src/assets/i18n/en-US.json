@@ -312,7 +312,13 @@
         "usage": "Asura Scans is a third-party webtoon aggregator. Offtoon retrieves publicly available data from Asura Scans solely to provide search and download functionality to end users for personal, offline use."
       },
       "support": "Offtoon believes in supporting the creators behind the content. We encourage all users to read official releases, purchase volumes, and support the authors, artists, and studios whose work they enjoy.",
-      "title": "2. THIRD-PARTY DATA SOURCES & COMPLIANCE"
+      "title": "2. THIRD-PARTY DATA SOURCES & COMPLIANCE",
+      "webtoons": {
+        "affiliation": "Offtoon is not affiliated with, endorsed by, or sponsored by WEBTOON, Naver Webtoon, or any of their affiliates. Users remain subject to WEBTOON's own terms of service and policies, which govern their use of that platform.",
+        "disclaimer": "Offtoon does not host or store any webtoon content. Episodes are fetched from WEBTOON at the time of user request, and only episodes that WEBTOON makes freely readable are retrieved. Paid episodes (Fast Pass, Daily Pass) are never accessed or unlocked.",
+        "title": "WEBTOON",
+        "usage": "WEBTOON (webtoons.com) is the official publisher of the series it distributes. Offtoon retrieves publicly available data from WEBTOON solely to provide search and download functionality to end users for personal, offline use."
+      }
     }
   }
 }

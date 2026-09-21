@@ -1,0 +1,12 @@
+# pnpm blocks postinstall scripts by default as a supply-chain precaution.
+# These four are the Angular build toolchain and need theirs in order to build
+# or locate native binaries, so the build cannot run while they are blocked:
+#   esbuild          - the bundler Angular builds with
+#   lmdb             - Angular's persistent build cache
+#   @parcel/watcher  - file watching for `ng serve`
+#   msgpackr-extract - native serialisation accelerator for lmdb
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
